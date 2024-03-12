@@ -1,0 +1,76 @@
+project:
+  type: website
+
+website:
+  title: "ISSS 608 Visual Analytics and Applications"
+  reader-mode: true
+  navbar: 
+    background: none
+    search: true
+  
+    
+  sidebar:
+    - style: "docked"
+      background: none
+      contents:
+        - index.qmd
+        - text: "---"
+        - section: "Hands On Exercises"
+          contents: 
+            - Hands-on_Ex\Hands-on_Ex01\Hands-on_Ex01.qmd
+            - Hands-on_Ex\Hands-on_Ex02\Hands-on_Ex02.qmd
+            - section: "Hands-on Exercise 3"
+              contents:
+                - Hands-on_Ex\Hands-on_Ex03\Hands-on_Ex03_1.qmd
+                - Hands-on_Ex\Hands-on_Ex03\Hands-on_Ex03_2.qmd
+            - section: "Hands-on Exercise 4"
+              contents:
+                - Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04_1.qmd
+                - Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04_2.qmd
+                - Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04_3.qmd
+                - Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04_4.qmd
+            - section: "Hands-on Exercise 5"
+              contents: 
+                - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_1.qmd
+                - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_2.qmd
+                - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_2_1.qmd
+                - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_3.qmd
+                - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_4.qmd
+                - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_5.qmd
+            - section: "Hands-on Exercise 6"
+              contents:
+                - Hands-on_Ex\Hands-on_Ex06\Hands-on_Ex6.qmd
+            - section: "Hands-on Exercise 7"
+              contents:
+                - Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex7_01.qmd
+                - Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex7_02.qmd
+                - Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex7_03.qmd
+            - Hands-on_Ex\Hands-on_Ex08\Hands-on_Ex8.qmd
+            
+        - text: "---"
+        - section: "In Class Exercises"
+          contents: 
+            - In-Class_Ex\In-Class_Ex01\In-Class_Ex01.qmd
+            - In-Class_Ex\In-Class_Ex06\In-Class_Ex06.qmd
+        - text: "---"
+        - section: "Take Home Exercises"
+          contents:
+            - Take-Home_Ex\Take-Home_Ex01\Take-Home_Ex01.qmd
+            - Take-Home_Ex\Take-Home_Ex02\Take-Home_Ex02.qmd
+            - Take-Home_Ex\Take-Home_Ex03\Take-Home_Ex03.qmd
+            - Take-Home_Ex\Take-Home_Ex04\Take-Home_Ex04.qmd
+        - text: "---"
+      
+  page-navigation: true
+format:
+  html:
+    theme: zephyr
+    css: styles.css
+    toc: true
+    grid: 
+      margin-width: 500px
+      body-width: 1000px
+      gutter-width: 2.0rem
+
+editor: visual
+

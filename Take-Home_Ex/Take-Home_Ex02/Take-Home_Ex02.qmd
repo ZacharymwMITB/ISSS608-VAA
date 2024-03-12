@@ -5,7 +5,7 @@ date: 01.24.2024
 date-modified: "last-modified"
 toc: true
 execute: 
-  eval: false
+  eval: true
   echo: true
   warning: false
 editor: visual
@@ -70,6 +70,10 @@ stu_qqq_SG_selected <- stu_qqq_SG %>%
 
 #Setting up the final table and saving the data for Exploratory Data Analysis
 
+
+```
+
+```{r}
 stu_qqq_SG_converted <- stu_qqq_SG_selected %>%
   
   # change column type
@@ -84,7 +88,7 @@ stu_qqq_SG_converted <- stu_qqq_SG_selected %>%
                               "Public" = "SGP01",
                               "Private" = "SGP03"),
   # binning of disaggregated data       
-         binned_ESCS = cut_number(stu_qqq_SG_selected2$ESCS, 
+         binned_ESCS = cut_number(stu_qqq_SG_selected$ESCS, 
                                     n = 4, 
                                     labels = c("Disadvantaged",
                                                "Slightly Disadvantaged",
@@ -344,7 +348,7 @@ P1 / P2 / P3 + plot_annotation(
 Based on the graph above, the assessment for both clarity and aesthetics described in the table below.
 
 | Assessment Criteria | Assessment Outcome                                                                                                                                                                                                                                                                                        | Possible Improvements                                                                                                                                                                                                                                                                                                                                       |
-|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-------------|---------------------------|--------------------------------|
 | **Clarity**         | The data is displayed accurately with the mean and median line provided for context. The distribution of each graph provides an approximate understanding of the type of distribution based on each performance metric. An additional boxplot below it provides additional understanding of the outliers. | To improve on the graph, the titles can be removed and each axis to label the performance metric is for. Additionally, a histogram can be added into the background to provide how accurate the density diagram correlates to the distribution as the density plot approximates the shape.                                                                  |
 | **Aesthetics**      | The graph is shown well using varying colours to separate the three different performance metrics. The mean and median are also clearly labeled with different colours to differentiate each other.                                                                                                       | The titles for each graph can be shortened to use the Axis labels instead and an overall title can be used for all three graphs. Additionally, instead of using grey for the median line, a brighter more distinct colour can be used. Another improvement is to increase the size of the charts as they are all cramped together and do not look pleasing. |
 
@@ -950,7 +954,7 @@ P12 <- ggplot(data= stu_qqq_SG_converted,
 :::
 
 | Assessment Criteria | Assessment Outcome                                                                                        | Possible Improvements                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-|---------------------|-----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|------------|------------------------------------------------|
 | **Clarity**         | Based on each of the graphs, the information is clear and easy to read and understand                     | The mean value is missing and does not allow to understand how different are the means. For graph 5, as there are more than 2 box plots per performance value, the mean value would be difficult to place - hence it will not be added. What can be improved is to either plot three individual ones or reduce the number of bins for ESCS. The "NA" values have also been removed.                                                                               |
 | **Aesthetics**      | The overall aesthetic is good and clean with not much clutter except for graph 4 which has multiple bins. | To further improve, I've changed the colour scheme and added a legend for all 3 instead of using the axis text which were repetitive. Additionally, the graphs were enlarged so that it can be viewed better. For all three plots, the dot representing the mean was also reduced in size as it was too big in comparison with the plots. For Graph 5, instead of having the plots next to each other, they were plot below instead and given individual legends. |
 
@@ -1292,7 +1296,7 @@ ggplot(data= stu_qqq_SG_converted,
 ```
 
 | Assessment Criteria | Assessment Outcome                                                                                                           | Possible Improvements                                                                                                                                                                                                                                                                                                                                                  |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|--------------|--------------|---------------------------------------------|
 | **Clarity**         | The initial chart is clear on depicting the varying mean based on the type of school according to their socioeconomic status | To further enhance the clarity, the plot with NA has been removed. Additionally, major gridlines across the y-axis has also been added for value clarity.                                                                                                                                                                                                              |
 | **Aesthetics**      | The chart is clear and minimal with not much clutter of information                                                          | The x-axis labels have been removed and a legend has been added. Colours were also added to clearly differentiate between public and private across all panels. The panel text and background have been changed to make it stand out more. The dot representing the mean has also been reduced slightly and colour has been changed to not clash with the box colours. |
 

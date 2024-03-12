@@ -332,6 +332,7 @@ ggplotly(gg1, tooltip = c("text"))
 
 ```{r}
 #| code-fold: true
+#| eval: false
  p1 + transition_states (Day, wrap=FALSE) +
    shadow_mark()
 ```

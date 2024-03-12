@@ -2,7 +2,30 @@
   {
     "listing": "/index.html",
     "items": [
-      "/about.html"
+      "/about.html",
+      "/Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html",
+      "/Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex6.html",
+      "/Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex7_01.html",
+      "/Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex7_02.html",
+      "/Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex7_03.html",
+      "/Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex8.html",
+      "/Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+      "/Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+      "/Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html",
+      "/Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html",
+      "/Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html",
+      "/Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_3.html",
+      "/Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html",
+      "/Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_1.html",
+      "/Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_2.html",
+      "/Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_3.html",
+      "/Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_4.html",
+      "/Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_5.html",
+      "/Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_2_1.html",
+      "/In-Class_Ex/In-Class_Ex07/In-Class_Ex07-IsoMap.html",
+      "/In-Class_Ex/In-Class_Ex06/In-Class_Ex06.html",
+      "/In-Class_Ex/In-Class_Ex01/In-Class_Ex01.html",
+      "/In-Class_Ex/In-Class_Ex07/data/geospatial/MPSZ-2019.html"
     ]
   }
 ]

@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Zachary Wong">
+<meta name="dcterms.date" content="2024-01-13">
+
+<title>ISSS 608 Visual Analytics and Applications - Take Home Exercise 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02.html" rel="next">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark border-bottom">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">ISSS 608 Visual Analytics and Applications</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools ms-auto">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Take-Home_Ex/Take-Home_Ex01/Take-Home_Ex01.html">Take Home Exercises</a></li><li class="breadcrumb-item"><a href="../../Take-Home_Ex/Take-Home_Ex01/Take-Home_Ex01.html">Take Home Exercise 1</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome to ISSS608 Visual Analytics and Applications!</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Hands On Exercises</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise 3</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 3.1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 3.2</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise 4</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands On Exercise 4.1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 4.2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 4.3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 4.4</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise 5</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 5.1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 5.2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_2_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on_Exercise 5.2.1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 5.3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 5.4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex5_5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 5.5</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise 6</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands On Exercise 6</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise 7</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex7_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands on Exercise 7.1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex7_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands on Exercise 7.2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex7_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands on Exercise 7.3</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands on Exercise 8</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">In Class Exercises</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../In-Class_Ex/In-Class_Ex01/In-Class_Ex01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">In-class Exercise 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../In-Class_Ex/In-Class_Ex06/In-Class_Ex06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">In-Class Exercise 6</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Take Home Exercises</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Take-Home_Ex/Take-Home_Ex01/Take-Home_Ex01.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Take Home Exercise 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Take Home Exercise 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Take-Home_Ex/Take-Home_Ex03/Take-Home_Ex03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Take Home Exercise 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Take-Home_Ex/Take-Home_Ex04/Take-Home_Ex04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Take Home Exercise 4</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#creating-data-visualization-beyond-default" id="toc-creating-data-visualization-beyond-default" class="nav-link active" data-scroll-target="#creating-data-visualization-beyond-default"><em>Creating Data Visualization Beyond Default</em></a>
+  <ul class="collapse">
+  <li><a href="#setting-the-scene" id="toc-setting-the-scene" class="nav-link" data-scroll-target="#setting-the-scene"><strong>Setting the Scene</strong></a></li>
+  <li><a href="#our-task" id="toc-our-task" class="nav-link" data-scroll-target="#our-task">Our Task</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The Data</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">1: Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#installing-r-packages" id="toc-installing-r-packages" class="nav-link" data-scroll-target="#installing-r-packages">1.1 Installing R packages</a></li>
+  <li><a href="#filtering-the-data" id="toc-filtering-the-data" class="nav-link" data-scroll-target="#filtering-the-data">1.2 Filtering the Data</a></li>
+  <li><a href="#further-filtering-of-dataset" id="toc-further-filtering-of-dataset" class="nav-link" data-scroll-target="#further-filtering-of-dataset">1.3 Further Filtering of Dataset</a></li>
+  <li><a href="#changing-data-types" id="toc-changing-data-types" class="nav-link" data-scroll-target="#changing-data-types">1.4 Changing Data Types</a></li>
+  </ul></li>
+  <li><a href="#visual-summary-and-observations" id="toc-visual-summary-and-observations" class="nav-link" data-scroll-target="#visual-summary-and-observations">2: Visual Summary and Observations</a>
+  <ul class="collapse">
+  <li><a href="#distribution-of-pv-scores" id="toc-distribution-of-pv-scores" class="nav-link" data-scroll-target="#distribution-of-pv-scores">2.1 Distribution of PV Scores</a></li>
+  <li><a href="#correlations-between-socioeconimic-index-escs-and-plausible-values-pvs" id="toc-correlations-between-socioeconimic-index-escs-and-plausible-values-pvs" class="nav-link" data-scroll-target="#correlations-between-socioeconimic-index-escs-and-plausible-values-pvs">2.2 Correlations between Socioeconimic Index (ESCS) and Plausible Values (PVs)</a></li>
+  <li><a href="#distribution-of-variables-categorized-by-gender" id="toc-distribution-of-variables-categorized-by-gender" class="nav-link" data-scroll-target="#distribution-of-variables-categorized-by-gender">2.3 Distribution of Variables Categorized by Gender</a></li>
+  <li><a href="#box-plots" id="toc-box-plots" class="nav-link" data-scroll-target="#box-plots">2.4 Box Plots</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">3: Summary</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Take Home Exercise 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zachary Wong </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 13, 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">February 17, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="creating-data-visualization-beyond-default" class="level1">
+<h1><em>Creating Data Visualization Beyond Default</em></h1>
+<section id="setting-the-scene" class="level2">
+<h2 class="anchored" data-anchor-id="setting-the-scene"><strong>Setting the Scene</strong></h2>
+<p>OECD education director Andreas Schleicher shared in a BBC article that “Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.” (2016) Furthermore, several Singapore’s Minister for Education also started an “every school a good school” slogan. The general public, however, strongly belief that there are still disparities that exist, especially between the elite schools and neighborhood school, between students from families with higher socioeconomic status and those with relatively lower socioeconomic status and immigration and non-immigration families.</p>
+</section>
+<section id="our-task" class="level2">
+<h2 class="anchored" data-anchor-id="our-task">Our Task</h2>
+<p>The 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. PISA global education survey every three years to assess the education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.</p>
+<p>In this take-home exercise, we are required to use appropriate <strong>Exploratory Data Analysis (EDA)</strong> methods and <strong>ggplot2</strong> functions to reveal:</p>
+<ul>
+<li><p>the distribution of Singapore students’ performance in mathematics, reading, and science, and</p></li>
+<li><p>the relationship between these performances with schools, gender and socioeconomic status of the students.</p></li>
+</ul>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>Our data will be obtained from the <a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 Database</a> which contains a full set of responses from individual students, school principles, and parents. There are a total of five data files available but we will only be using the <strong>Student Questionnaire Data File.</strong></p>
+</section>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">1: Data Preparation</h2>
+<section id="installing-r-packages" class="level3">
+<h3 class="anchored" data-anchor-id="installing-r-packages">1.1 Installing R packages</h3>
+<p>We will be using the function <code>pacman::p_load</code> from the <code>pacman</code> package to install and call off multiple libraries from various R packages:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, ggstatsplot, ggridges, plotly, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               patchwork, scales, paletteer, viridis,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ggiraph, ggiraphExtra, gganimate, ggmosaic, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               gifski, ggpubr, ggdist, ggrain, GGally,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               qqplotr, gt, ggpmisc,haven, webr,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>               transformr, Hmisc, vcd, knitr, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>               kableExtra, DT, rstatix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-the-data">1.2 Filtering the Data</h3>
+<p>As mentioned earlier, the <strong>Student Questionnaire Data File</strong> will be used for our analysis, however further filtering will need to be done as our main focus will be on <strong>Singapore</strong>. The following code chunk below filters the original dataset according to entries from Singapore only and outputs a separate file titled: <strong>stu_qqq_SG</strong></p>
+<section id="the-code" class="level4">
+<h4 class="anchored" data-anchor-id="the-code">The Code</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stu_qqq <span class="ot">&lt;-</span> <span class="fu">read_sas</span>(<span class="st">"Data/cy08msp_stu_qqq.sas7bdat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG <span class="ot">&lt;-</span> stu_qqq <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CNT <span class="sc">==</span><span class="st">"SGP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(stu_qqq_SG,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Data/stu_qqq_SG.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"Data/stu_qqq_SG.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="summary-statistics-of-the-filtered-dataset-stu_qqq_sg" class="level4">
+<h4 class="anchored" data-anchor-id="summary-statistics-of-the-filtered-dataset-stu_qqq_sg">Summary Statistics of the Filtered Dataset: <em>stu_qqq_SG</em></h4>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Head of Filtered Dataset</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Checking for Duplicates</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stu_qqq_SG,<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 1,279
+   CNT   CNTRYID CNTSCHID CNTSTUID CYC   NatCen STRATUM SUBNATIO REGION  OECD
+   &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
+ 1 SGP       702 70200052 70200001 08MS  070200 SGP01   7020000   70200     0
+ 2 SGP       702 70200134 70200002 08MS  070200 SGP01   7020000   70200     0
+ 3 SGP       702 70200112 70200003 08MS  070200 SGP01   7020000   70200     0
+ 4 SGP       702 70200004 70200004 08MS  070200 SGP01   7020000   70200     0
+ 5 SGP       702 70200152 70200005 08MS  070200 SGP01   7020000   70200     0
+ 6 SGP       702 70200043 70200006 08MS  070200 SGP01   7020000   70200     0
+ 7 SGP       702 70200049 70200007 08MS  070200 SGP01   7020000   70200     0
+ 8 SGP       702 70200107 70200008 08MS  070200 SGP01   7020000   70200     0
+ 9 SGP       702 70200012 70200009 08MS  070200 SGP01   7020000   70200     0
+10 SGP       702 70200061 70200010 08MS  070200 SGP01   7020000   70200     0
+# ℹ 1,269 more variables: ADMINMODE &lt;dbl&gt;, LANGTEST_QQQ &lt;dbl&gt;,
+#   LANGTEST_COG &lt;dbl&gt;, LANGTEST_PAQ &lt;dbl&gt;, Option_CT &lt;dbl&gt;, Option_FL &lt;dbl&gt;,
+#   Option_ICTQ &lt;dbl&gt;, Option_WBQ &lt;dbl&gt;, Option_PQ &lt;dbl&gt;, Option_TQ &lt;dbl&gt;,
+#   Option_UH &lt;dbl&gt;, BOOKID &lt;dbl&gt;, ST001D01T &lt;dbl&gt;, ST003D02T &lt;dbl&gt;,
+#   ST003D03T &lt;dbl&gt;, ST004D01T &lt;dbl&gt;, ST250Q01JA &lt;dbl&gt;, ST250Q02JA &lt;dbl&gt;,
+#   ST250Q03JA &lt;dbl&gt;, ST250Q04JA &lt;dbl&gt;, ST250Q05JA &lt;dbl&gt;, ST250D06JA &lt;chr&gt;,
+#   ST250D07JA &lt;chr&gt;, ST251Q01JA &lt;dbl&gt;, ST251Q02JA &lt;dbl&gt;, ST251Q03JA &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>There are a total of 6,066 rows and 1,279 variables available in our dataset.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG[<span class="fu">duplicated</span>(stu_qqq_SG),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 1,279
+# ℹ 1,279 variables: CNT &lt;chr&gt;, CNTRYID &lt;dbl&gt;, CNTSCHID &lt;dbl&gt;, CNTSTUID &lt;dbl&gt;,
+#   CYC &lt;chr&gt;, NatCen &lt;chr&gt;, STRATUM &lt;chr&gt;, SUBNATIO &lt;chr&gt;, REGION &lt;dbl&gt;,
+#   OECD &lt;dbl&gt;, ADMINMODE &lt;dbl&gt;, LANGTEST_QQQ &lt;dbl&gt;, LANGTEST_COG &lt;dbl&gt;,
+#   LANGTEST_PAQ &lt;dbl&gt;, Option_CT &lt;dbl&gt;, Option_FL &lt;dbl&gt;, Option_ICTQ &lt;dbl&gt;,
+#   Option_WBQ &lt;dbl&gt;, Option_PQ &lt;dbl&gt;, Option_TQ &lt;dbl&gt;, Option_UH &lt;dbl&gt;,
+#   BOOKID &lt;dbl&gt;, ST001D01T &lt;dbl&gt;, ST003D02T &lt;dbl&gt;, ST003D03T &lt;dbl&gt;,
+#   ST004D01T &lt;dbl&gt;, ST250Q01JA &lt;dbl&gt;, ST250Q02JA &lt;dbl&gt;, ST250Q03JA &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>From the output, there are no duplicated rows found in our dataset.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="further-filtering-of-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="further-filtering-of-dataset">1.3 Further Filtering of Dataset</h3>
+<p>In the earlier section, we filtered our dataset to only show results from Singapore. However, there are still 1,279 variables - most of which that will not be required or used in our analysis. Therefore, we will select 14 variables for our first cut. Using the <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwebfs.oecd.org%2Fpisa2022%2FCY08MSP_CODEBOOK_5thDecember23.xlsx&amp;wdOrigin=BROWSELINK">code book</a> from OECD as reference, we would be select the features listed below using the <code>select</code> function and write it into another file.</p>
+<table class="table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 59%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Column Names</th>
+<th>Variable Labels</th>
+<th>Column Number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CNTSTUID</td>
+<td>Student ID</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>ST004D01T</td>
+<td>Student (Standardized) Gender</td>
+<td>26</td>
+</tr>
+<tr class="odd">
+<td>EXERPRAC</td>
+<td>Exercise or practice a sport before or after school</td>
+<td>979</td>
+</tr>
+<tr class="even">
+<td>STUDYHMW</td>
+<td>Studying for school or homework before or after school</td>
+<td>980</td>
+</tr>
+<tr class="odd">
+<td>WORKPAY</td>
+<td>Working for pay before or after school</td>
+<td>981</td>
+</tr>
+<tr class="even">
+<td>DURECEC</td>
+<td>Duration in early childhood education and care</td>
+<td>987</td>
+</tr>
+<tr class="odd">
+<td>RELATST</td>
+<td>Quality of student-teacher relationships (WLE)</td>
+<td>990</td>
+</tr>
+<tr class="even">
+<td>MISCED</td>
+<td>Mother’s level of education (ISCED)</td>
+<td>1030</td>
+</tr>
+<tr class="odd">
+<td>FISCED</td>
+<td>Father’s level of education (ISCED)</td>
+<td>1031</td>
+</tr>
+<tr class="even">
+<td>ICTAVSCH</td>
+<td>Availability and Usage of ICT at School</td>
+<td>1051</td>
+</tr>
+<tr class="odd">
+<td>PV1MATH</td>
+<td>Plausible Value 1 in Mathematics</td>
+<td>1167</td>
+</tr>
+<tr class="even">
+<td>PV1READ</td>
+<td>Plausible Value 1 in Read</td>
+<td>1177</td>
+</tr>
+<tr class="odd">
+<td>PV1SCIE</td>
+<td>Plausible Value 1 in Science</td>
+<td>1187</td>
+</tr>
+<tr class="even">
+<td>ESCS</td>
+<td>Index of economic, social and cultural status</td>
+<td>1039</td>
+</tr>
+</tbody>
+</table>
+<section id="preparing-the-new-dataset" class="level4">
+<h4 class="anchored">Preparing the New Dataset</h4>
+<p>The <code>select</code> function as shown in the code tab removes the unwanted variables (columns). This narrows down our dataset to the few variables selected.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Code used to Write New Dataset for Analysis</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Summary Statistics of Dataset: stu_qqq_SG_select_analysis</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<section id="selecting-the-variables-to-keep" class="level3">
+<h3 class="anchored" data-anchor-id="selecting-the-variables-to-keep">Selecting the Variables to Keep</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">4</span>,<span class="dv">26</span>,<span class="dv">979</span><span class="sc">:</span><span class="dv">981</span>,<span class="dv">987</span>,<span class="dv">990</span>,<span class="dv">1030</span>,<span class="dv">1031</span>,<span class="dv">1039</span>,<span class="dv">1051</span>,<span class="dv">1167</span>,<span class="dv">1177</span>,<span class="dv">1187</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="writing-the-dataset-into-a-reading-file-type" class="level3">
+<h3 class="anchored" data-anchor-id="writing-the-dataset-into-a-reading-file-type">Writing the Dataset into a Reading File Type</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">"Data/stu_qqq_SG_select_analysis.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="reading-the-new-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="reading-the-new-dataset">Reading the New Dataset:</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"Data/stu_qqq_SG_select_analysis.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stu_qqq_SG_select_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [6,606 × 14] (S3: tbl_df/tbl/data.frame)
+ $ CNTSTUID : num [1:6606] 70200001 70200002 70200003 70200004 70200005 ...
+  ..- attr(*, "label")= chr "Intl. Student ID"
+ $ ST004D01T: num [1:6606] 1 2 2 2 1 1 2 2 1 2 ...
+  ..- attr(*, "label")= chr "Student (Standardized) Gender"
+ $ EXERPRAC : num [1:6606] 1 4 2 5 9 1 2 0 3 5 ...
+  ..- attr(*, "label")= chr "Exercise or practice a sport before or after school"
+ $ STUDYHMW : num [1:6606] 4 7 3 5 7 10 0 10 5 3 ...
+  ..- attr(*, "label")= chr "Studying for school or homework before or after school"
+ $ WORKPAY  : num [1:6606] 0 0 0 6 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "Working for pay before or after school"
+ $ DURECEC  : num [1:6606] 3 2 NA 3 NA 4 3 NA NA 3 ...
+  ..- attr(*, "label")= chr "Duration in early childhood education and care"
+ $ RELATST  : num [1:6606] -0.261 1.244 0.719 -0.219 1.073 ...
+  ..- attr(*, "label")= chr "Quality of student-teacher relationships (WLE)"
+ $ MISCED   : num [1:6606] 8 7 4 6 7 7 6 9 8 8 ...
+  ..- attr(*, "label")= chr "Mother’s level of education (ISCED)"
+ $ FISCED   : num [1:6606] 7 7 4 6 7 9 2 8 8 7 ...
+  ..- attr(*, "label")= chr "Father’s level of education (ISCED)"
+ $ ESCS     : num [1:6606] 0.1836 0.8261 -1.0357 -0.9606 0.0856 ...
+  ..- attr(*, "label")= chr "Index of economic, social and cultural status"
+ $ ICTAVSCH : num [1:6606] 7 7 7 7 5 6 7 6 7 6 ...
+  ..- attr(*, "label")= chr "Availability and Usage of ICT at School"
+ $ PV1MATH  : num [1:6606] 639 697 694 427 436 ...
+  ..- attr(*, "label")= chr "Plausible Value 1 in Mathematics"
+ $ PV1READ  : num [1:6606] 676 626 620 381 448 ...
+  ..- attr(*, "label")= chr "Plausible Value 1 in Reading"
+ $ PV1SCIE  : num [1:6606] 711 671 666 340 456 ...
+  ..- attr(*, "label")= chr "Plausible Value 1 in Science"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="changing-data-types" class="level3">
+<h3 class="anchored" data-anchor-id="changing-data-types">1.4 Changing Data Types</h3>
+<p>Based on the structure shown in Section 1.3, variables data types need to be corrected before we can correctly use them for analysis.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Variables Data Types to be Changed</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Code for Data Type Change</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Structure of New Dataset</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>The table of variables below are classified as <code>num</code> which is for numerical continuous data. To correct to their respective data types, we will be using both <code>as.character</code> and <code>as.factor</code> . Click the next tab to view the code used.</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td><strong>Character Variables</strong></td>
+<td><strong>Factor Variables</strong></td>
+</tr>
+<tr class="even">
+<td>CNTSTUID</td>
+<td>ST004D01T</td>
+</tr>
+<tr class="odd">
+<td>EXERPRAC</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>STUDYHMW</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>WORKPAY</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>DURECEC</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>RELATST</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>MISCED</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>FISCED</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>ICTAVSCH</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSTUID =</span> <span class="fu">as.character</span>(CNTSTUID))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ST004D01T =</span> <span class="fu">as.factor</span>(ST004D01T))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">EXERPRAC =</span> <span class="fu">as.character</span>(EXERPRAC))</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">STUDYHMW =</span> <span class="fu">as.character</span>(STUDYHMW))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">WORKPAY =</span> <span class="fu">as.character</span>(WORKPAY))</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">DURECEC =</span> <span class="fu">as.character</span>(DURECEC))</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RELATST =</span> <span class="fu">as.character</span>(RELATST))</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MISCED =</span> <span class="fu">as.character</span>(MISCED))</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">FISCED =</span> <span class="fu">as.character</span>(FISCED))</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ICTAVSCH =</span> <span class="fu">as.character</span>(ICTAVSCH))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This code here is to recode our gender variable for easier representation in plots for later sections.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>stu_qqq_SG_select_analysis <span class="ot">&lt;-</span> stu_qqq_SG_select_analysis <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ST004D01T=</span><span class="fu">recode</span>(ST004D01T,<span class="st">"1"</span> <span class="ot">=</span> <span class="st">"Female"</span>,<span class="st">"2"</span><span class="ot">=</span><span class="st">"Male"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(stu_qqq_SG_select_analysis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [6,606 × 14] (S3: tbl_df/tbl/data.frame)
+ $ CNTSTUID : chr [1:6606] "70200001" "70200002" "70200003" "70200004" ...
+ $ ST004D01T: Factor w/ 2 levels "Female","Male": 1 2 2 2 1 1 2 2 1 2 ...
+ $ EXERPRAC : chr [1:6606] "1" "4" "2" "5" ...
+ $ STUDYHMW : chr [1:6606] "4" "7" "3" "5" ...
+ $ WORKPAY  : chr [1:6606] "0" "0" "0" "6" ...
+ $ DURECEC  : chr [1:6606] "3" "2" NA "3" ...
+ $ RELATST  : chr [1:6606] "-0.2606" "1.2437" "0.719" "-0.2194" ...
+ $ MISCED   : chr [1:6606] "8" "7" "4" "6" ...
+ $ FISCED   : chr [1:6606] "7" "7" "4" "6" ...
+ $ ESCS     : num [1:6606] 0.1836 0.8261 -1.0357 -0.9606 0.0856 ...
+  ..- attr(*, "label")= chr "Index of economic, social and cultural status"
+ $ ICTAVSCH : chr [1:6606] "7" "7" "7" "7" ...
+ $ PV1MATH  : num [1:6606] 639 697 694 427 436 ...
+  ..- attr(*, "label")= chr "Plausible Value 1 in Mathematics"
+ $ PV1READ  : num [1:6606] 676 626 620 381 448 ...
+  ..- attr(*, "label")= chr "Plausible Value 1 in Reading"
+ $ PV1SCIE  : num [1:6606] 711 671 666 340 456 ...
+  ..- attr(*, "label")= chr "Plausible Value 1 in Science"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="visual-summary-and-observations" class="level2">
+<h2 class="anchored" data-anchor-id="visual-summary-and-observations">2: Visual Summary and Observations</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>The following observations are based on surface level understanding of the data provided by the PISA survey. As this exercise is used for practice, do use the information below provided with a pinch of salt.</strong></p>
+</div>
+</div>
+<section id="distribution-of-pv-scores" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-pv-scores">2.1 Distribution of PV Scores</h3>
+<p>The panel below displays the distribution of the three Plausible Value 1 (PV1) values that are being used in this study. The plots have been further split between both males and females to further understand distribution of these scores between both genders.</p>
+<p>Based on the three distribution charts below, it can be observed that the distribution of PV1 values between both male and female are relatively similar. This does not provide sufficient insight for us to achieve the task that was set out in the beginning.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Reminder of the Task at Hand:</p>
+<ul>
+<li><p>the distribution of Singapore students’ performance in mathematics, reading, and science, and</p></li>
+<li><p>the relationship between these performances with schools, gender and socioeconomic status of the students.</p></li>
+</ul>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">PV1Math Distribution</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">PV1Math Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">PV1READ Distribution</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false">PV1READ Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false">PV1SCIE Distribution</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-6" role="tab" aria-controls="tabset-4-6" aria-selected="false">PV1SCIE Code</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> PV1MATH, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> ST004D01T)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"grey30"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">position=</span><span class="st">"identity"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.3</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x=</span>PV1MATH))<span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> <span class="fu">inset_element</span>(p2, </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">left =</span> <span class="fl">0.7</span>, </span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">bottom =</span> <span class="fl">0.7</span>, </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">right =</span> <span class="dv">1</span>, </span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">top =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> PV1READ, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> ST004D01T)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"grey30"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">position=</span><span class="st">"identity"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.3</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x=</span>PV1READ))<span class="sc">+</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>(p1  <span class="sc">+</span> <span class="fu">inset_element</span>(p2, </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">left =</span> <span class="fl">0.7</span>, </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">bottom =</span> <span class="fl">0.7</span>, </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">right =</span> <span class="dv">1</span>, </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">top =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-4-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-5-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-4-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-6-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> PV1SCIE,<span class="at">fill=</span>ST004D01T)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y=</span>..density..),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"grey30"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">position=</span><span class="st">"identity"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">alpha=</span><span class="fl">0.3</span>)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x=</span>PV1SCIE))<span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>()</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> <span class="fu">inset_element</span>(p2, </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">left =</span> <span class="fl">0.7</span>, </span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">bottom =</span> <span class="fl">0.7</span>, </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">right =</span> <span class="dv">1</span>, </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">top =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="correlations-between-socioeconimic-index-escs-and-plausible-values-pvs" class="level3">
+<h3 class="anchored" data-anchor-id="correlations-between-socioeconimic-index-escs-and-plausible-values-pvs">2.2 Correlations between Socioeconimic Index (ESCS) and Plausible Values (PVs)</h3>
+<p>In this next section, a scatter plot is used to see if there is any correlation between the Socioeconomic Index (ESCS) and various PV1s in Math, Reading and Science.</p>
+<p>Based on the three plots shown below, it can be deduced that the ESCS has a positive correlation with the PV scores. This means that the higher the economic, social and cultural status of the individual, the higher probability with reason that they would perform better for the PISA test.</p>
+<p>The ESCS index provides a materialistic comparison between individuals and provides, at most, a good understanding of the individuals environment. However, this measure is not entirely accurate as there are various components involved that can be biased to the country itself.To properly understand the usefulness of ESCS and its correlation to the PVs, more information would need to be provided and analyzed in detail.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Plots</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Code</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(ESCS, PV1MATH))<span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span>  <span class="fl">0.1</span>, <span class="at">color =</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span>lm,<span class="at">se=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_cor</span>(<span class="at">method=</span><span class="st">"pearson"</span>,<span class="at">label.x=</span><span class="sc">-</span><span class="dv">3</span>, <span class="at">label.y=</span><span class="dv">760</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(ESCS, PV1READ))<span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span>  <span class="fl">0.1</span>, <span class="at">color =</span><span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span>lm,<span class="at">se=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_cor</span>(<span class="at">method=</span><span class="st">"pearson"</span>,<span class="at">label.x=</span><span class="sc">-</span><span class="dv">3</span>, <span class="at">label.y=</span><span class="dv">760</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_qqq_SG_select_analysis,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(ESCS, PV1SCIE))<span class="sc">+</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span>  <span class="fl">0.1</span>, <span class="at">color =</span><span class="st">"green"</span>)<span class="sc">+</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span>lm,<span class="at">se=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_cor</span>(<span class="at">method=</span><span class="st">"pearson"</span>,<span class="at">label.x=</span><span class="sc">-</span><span class="dv">3</span>, <span class="at">label.y=</span><span class="dv">760</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> <span class="fu">plot_spacer</span>() <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_spacer</span>() <span class="sc">+</span> p3 <span class="sc">+</span> <span class="fu">plot_spacer</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="distribution-of-variables-categorized-by-gender" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-variables-categorized-by-gender">2.3 Distribution of Variables Categorized by Gender</h3>
+<p>In this next two section, various barplots and boxplots will be used to visualize the distribution of how each gender has answered in the PISA tests for various socioeconomic components. Based on this, we can then use it together with the next section in the hopes of obtaining better insight between perfomance and socioeconomic status.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The following sections will use Math PV1 for all of its measures in performance as based on our earlier section, the distribution between the scores are similar between both male and female.</p>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Number of times Students Exercise or Practice a Sport after School</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Studying for school or homework before or after school</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">Working for pay before or after school</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-4" role="tab" aria-controls="tabset-6-4" aria-selected="false">Duration in early childhood education and care</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-5" role="tab" aria-controls="tabset-6-5" aria-selected="false">Availability and Usage of ICT at School</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> EXERPRAC, <span class="at">fill=</span>ST004D01T))<span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Legend</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>No exercise or sports</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1 time of exercising or sports per week</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2 time of exercising or sports per week</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3 time of exercising or sports per week</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4 time of exercising or sports per week</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5 time of exercising or sports per week</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6 time of exercising or sports per week</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7 time of exercising or sports per week</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8 time of exercising or sports per week</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9 time of exercising or sports per week</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>10 or more times of exercising or sports per week</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> STUDYHMW, <span class="at">fill=</span>ST004D01T))<span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span><span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Legend</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>No studying</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1 time of studying per week</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2 times of studying per week</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3 times of studying per week</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4 times of studying per week</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5 times of studying per week</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6 times of studying per week</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7 times of studying per week</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8 times of studying per week</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9 times of studying per week</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>10 or more times of study per week</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> WORKPAY, <span class="at">fill=</span>ST004D01T))<span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span><span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Legend</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>No work for pay</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1 time of working for pay per week</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>2 times of working for pay per week</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>3 times of working for pay per week</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>4 times of working for pay per week</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>5 times of working for pay per week</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6 times of working for pay per week</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>7 times of working for pay per week</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>8 times of working for pay per week</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>9 times of working for pay per week</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>10 or more times of working for pay per week</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-6-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> DURECEC, <span class="at">fill=</span>ST004D01T))<span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span><span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Legend</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Attended ECEC for less than a year</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Attended ECEC for at least one but less than two years</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Attended ECEC for at least two but less than three years</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Attended ECEC for at least three but less than four years</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Attended ECEC for at least four but less than five years</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Attended ECEC for at least five but less than six years</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Attended ECEC for at least six but less than seven years</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>Attended ECEC for at least seven but less than eight years</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Attended ECEC for at least eight years</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-6-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu_qqq_SG_select_analysis, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> ICTAVSCH, <span class="at">fill=</span>ST004D01T))<span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span><span class="st">"dodge"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Legend</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>No ICT resources available at school</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>1 ICT resource available at school</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>1 ICT resource available at school</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>1 ICT resource available at school</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>1 ICT resource available at school</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>1 ICT resource available at school</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>1 ICT resource available at school</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>1 ICT resource available at school</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="box-plots" class="level3">
+<h3 class="anchored" data-anchor-id="box-plots">2.4 Box Plots</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Number of times Students Exercise or Practice a Sport after School</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Studying for school or homework before or after school</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">Working for pay before or after school</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-4" role="tab" aria-controls="tabset-7-4" aria-selected="false">Duration in early childhood education and care</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-5" role="tab" aria-controls="tabset-7-5" aria-selected="false">Availability and Usage of ICT at School</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>stu_qqq_SG_select_analysis,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(EXERPRAC, PV1MATH))<span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha=</span><span class="dv">0</span>,<span class="fu">aes</span>(<span class="at">colour=</span>ST004D01T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>stu_qqq_SG_select_analysis,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(STUDYHMW, PV1MATH))<span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha=</span><span class="dv">0</span>,<span class="fu">aes</span>(<span class="at">colour=</span>ST004D01T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>stu_qqq_SG_select_analysis,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(WORKPAY, PV1MATH))<span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha=</span><span class="dv">0</span>,<span class="fu">aes</span>(<span class="at">colour=</span>ST004D01T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-7-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>stu_qqq_SG_select_analysis,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(DURECEC, PV1MATH))<span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha=</span><span class="dv">0</span>,<span class="fu">aes</span>(<span class="at">colour=</span>ST004D01T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-7-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>stu_qqq_SG_select_analysis,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(ICTAVSCH, PV1MATH))<span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha=</span><span class="dv">0</span>,<span class="fu">aes</span>(<span class="at">colour=</span>ST004D01T))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-Home_Ex01_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">3: Summary</h2>
+<p>The analysis and study can be summarized in the various points listed below.</p>
+<ul>
+<li><p>The distribution of performance between male and female in Singapore do not differ as much on a whole</p></li>
+<li><p>There is a positive correlation between the Socioeconic Index (ESCS) and performance of students.</p></li>
+<li><p>There is no discernible trend between increased exercises and performance.</p></li>
+<li><p>There is a slight increasing trend when more time is spent studying or doing homework before or after school. More insights can be obtained if we can can compare between the length of each study and how it affects the performance of each individual.</p></li>
+<li><p>There is a decreasing trend in performance when individuals spend more time working for pay.</p></li>
+<li><p>There is no discernible trend between length of early childhood studies and performance. However, it is noted that males have a tendency of not performing as well when they do not have early childhood education.</p></li>
+<li><p>There is a slight trend in increasing performance if the school has more infocomm technology available for the students. However, this information is insufficient as there is no measure on how often do students access these for learning.</p></li>
+</ul>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Below are the matereials that were used as reference for the creation of this article:</p>
+<ul>
+<li><p><a href="https://www.statology.org/ggplot-legend-labels/">Statology</a></p></li>
+<li><p><a href="https://r-charts.com/ggplot2/legend/">R-Charts</a></p></li>
+<li><p><a href="GGplot">https://ggplot2-book.org/scales-guides#sec-scale-names</a></p></li>
+<li><p><a href="Patchwork">https://patchwork.data-imaginist.com/reference/inset_element.html</a></p></li>
+<li><p><a href="https://r4va.netlify.app/chap02">Prof Kam - R4Eva</a></p></li>
+<li><p><a href="GGPlot2 - Tidyverse">https://ggplot2.tidyverse.org/reference/geom_bar.html</a></p></li>
+<li><p><a href="https://www.oecd.org/pisa/data/2022database/">OECD</a></p></li>
+<li><p>The measure of socio-economic status in PISA: a review and some suggested improvements by Francesco Avvisati Published: 06 June 2020, Large-scale Assessments in Education volume 8, Article number: 8 (2020), Springer</p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../Take-Home_Ex/Take-Home_Ex02/Take-Home_Ex02.html" class="pagination-link">
+        <span class="nav-page-text">Take Home Exercise 2</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

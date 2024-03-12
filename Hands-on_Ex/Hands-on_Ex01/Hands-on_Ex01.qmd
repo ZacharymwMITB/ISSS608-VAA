@@ -1,0 +1,214 @@
+---
+title: "Hands-on Exercise 1"
+author: "Zachary Wong"
+date: 01.07.2024
+---
+
+# Getting Started
+
+## Install and launching R packages
+
+The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+::: panel-tabset
+## Importing the data
+
+```{r}
+exam_data <- read.csv("data/Exam_data.csv")
+
+```
+
+## Additional code to check on data
+
+```{r}
+
+summary(exam_data)
+
+```
+:::
+
+## Plotting a simple bar chart
+
+```{r}
+#| echo: false
+ggplot(data = exam_data,
+       aes(x = RACE))+
+  geom_bar()
+```
+
+## Using GGplot2 (Histogram)
+
+```{r}
+ggplot(data=exam_data, aes(x = MATHS)) + 
+  geom_histogram(bins = 10,
+                 boundary = 100,
+                 color = "black",
+                 fill= "grey") +
+  ggtitle("Distribution of Maths Scores")
+```
+
+## Using GGplot2 (Dotplot)
+
+```{r}
+ggplot(data=exam_data,
+       aes(x= MATHS)) +
+  geom_dotplot(binwidth = 2.5,
+               dotsize = 0.5) +
+  scale_y_continuous(NULL,
+                     breaks=NULL)
+```
+
+## Modifying A Geometric Object by Changing *aes()*
+
+```{r}
+ggplot(data = exam_data,
+        aes(x = MATHS,
+            fill= GENDER)) +
+  geom_histogram(bins = 20,
+                 color = "grey30")
+```
+
+## Geometric Objects: *geom-density()*
+
+```{r}
+
+ggplot(data=exam_data,
+        aes(x = MATHS,
+            colour = GENDER)) +
+  geom_density()
+```
+
+## Geometric Objects: `geom_boxplot`
+
+```{r}
+ggplot(data=exam_data,
+        aes( y = MATHS,
+             x = GENDER)) +
+  geom_boxplot(notches=TRUE)
+```
+
+## Geometric Objects: *geom_violin*
+
+```{r}
+ggplot(data=exam_data,
+        aes(y= MATHS,
+            x= GENDER)) +
+  geom_violin()
+```
+
+## Geometric Objects: *geom_point()*
+
+```{r}
+ggplot(data=exam_data,
+        aes(x= MATHS,
+            y= ENGLISH)) +
+  geom_point()
+```
+
+### Combining *geom* Objects
+
+```{r}
+ggplot(data=exam_data,
+        aes(y=MATHS,
+            x=ENGLISH)) + 
+  geom_boxplot () +
+  geom_point(position="jitter",
+             size = 0.5)
+
+```
+
+## Adding Essential Grammatical Elements in ggplot2: *stat*
+
+```{r}
+ggplot(data=exam_data,
+       aes (y = MATHS, x = GENDER)) +
+  geom_boxplot() +
+  stat_summary(geom="point",
+               fun.y="mean",
+               color = "red",
+               size=4)
+```
+
+## Adding a Best Fit Curve on a Scatterplot
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS,y=ENGLISH)) +
+  geom_point()+
+  geom_smooth(method=lm,
+              size=0.5)
+```
+
+## Adding Essential Grammatical Elements in ggplot2: *Facets*
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS)) +
+  geom_histogram(bins=20) +
+    facet_wrap (~CLASS)
+
+ggplot(data=exam_data,
+       aes(x=MATHS)) +
+  geom_histogram(bins=20) +
+    facet_grid (~CLASS)
+```
+
+## Essential Grammatical Elements in ggplot2: *Coordinates*
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip()
+```
+
+### Changing the y- and x-axis Range
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=MATHS, y=ENGLISH))+
+  geom_point() +
+  geom_smooth(method=lm, size= 0.5)+
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+
+```
+
+## Essential Grammatical Elements in ggplot2: *Themes*
+
+### Gray Theme
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_gray()
+
+```
+
+### Classic Theme
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_classic()
+
+```
+
+### Classic Minimal
+
+```{r}
+ggplot(data=exam_data,
+       aes(x=RACE)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+
+```

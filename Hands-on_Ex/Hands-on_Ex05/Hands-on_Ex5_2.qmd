@@ -1,0 +1,41 @@
+---
+title: "Hands-on Exercise 5.2"
+author: "Zachary Wong"
+date: 02.02.2024
+date-modified: "last-modified"
+toc: true
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+code-overflow: wrap
+---
+
+# Visual Correlation Analysis
+
+## Overview
+
+Correlation coefficient is a popular statistic that use to measure the type and strength of the relationship between two variables. The values of a correlation coefficient ranges between -1.0 and 1.0. A correlation coefficient of 1 shows a perfect linear relationship between the two variables, while a -1.0 shows a perfect inverse relationship between the two variables. A correlation coefficient of 0.0 shows no linear relationship between the two variables.
+
+When multivariate data are used, the correlation coefficeints of the pair comparisons are displayed in a table form known as correlation matrix or scatterplot matrix.
+
+There are three broad reasons for computing a correlation matrix.
+
+-   To reveal the relationship between high-dimensional variables pair-wisely.
+
+-   To input into other analyses. For example, people commonly use correlation matrices as inputs for exploratory factor analysis, confirmatory factor analysis, structural equation models, and linear regression when excluding missing values pairwise.
+
+-   As a diagnostic when checking other analyses. For example, with linear regression a high amount of correlations suggests that the linear regression’s estimates will be unreliable.
+
+When the data is large, both in terms of the number of observations and the number of variables, [Corrgram](http://www.datavis.ca/papers/corrgram.pdf) tend to be used to visually explore and analyse the structure and the patterns of relations among variables. It is designed based on two main schemes:
+
+-   Rendering the value of a correlation to depict its sign and magnitude, and
+
+-   Reordering the variables in a correlation matrix so that “similar” variables are positioned adjacently, facilitating perception.
+
+In this hands-on exercise, you will learn how to plot data visualisation for visualising correlation matrix with R. It consists of three main sections. First, you will learn how to create correlation matrix using [*pairs()*](https://www.rdocumentation.org/packages/graphics/versions/3.6.0/topics/pairs) of R Graphics. Next, you will learn how to plot corrgram using **corrplot** package of R. Lastly, you will learn how to create an interactive correlation matrix using plotly R.
+
+## Installing and Launching R Packages
+
+The rest of the exercise will be completed in this page : Hands-on Exercise 5.2.1

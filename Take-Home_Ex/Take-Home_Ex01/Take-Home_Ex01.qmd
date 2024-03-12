@@ -1,0 +1,663 @@
+---
+title: "Take Home Exercise 1"
+author: "Zachary Wong"
+date: January 13, 2024
+date-modified: "last-modified"
+toc: true
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+code-overflow: wrap
+---
+
+# *Creating Data Visualization Beyond Default*
+
+## **Setting the Scene**
+
+OECD education director Andreas Schleicher shared in a BBC article that “Singapore managed to achieve excellence without wide differences between children from wealthy and disadvantaged families.” (2016) Furthermore, several Singapore’s Minister for Education also started an “every school a good school” slogan. The general public, however, strongly belief that there are still disparities that exist, especially between the elite schools and neighborhood school, between students from families with higher socioeconomic status and those with relatively lower socioeconomic status and immigration and non-immigration families.
+
+## Our Task
+
+The 2022 Programme for International Student Assessment (PISA) data was released on December 5, 2022. PISA global education survey every three years to assess the education systems worldwide through testing 15 year old students in the subjects of mathematics, reading, and science.
+
+In this take-home exercise, we are required to use appropriate **Exploratory Data Analysis (EDA)** methods and **ggplot2** functions to reveal:
+
+-   the distribution of Singapore students’ performance in mathematics, reading, and science, and
+
+-   the relationship between these performances with schools, gender and socioeconomic status of the students.
+
+## The Data
+
+Our data will be obtained from the [PISA 2022 Database](https://www.oecd.org/pisa/data/2022database/) which contains a full set of responses from individual students, school principles, and parents. There are a total of five data files available but we will only be using the **Student Questionnaire Data File.**
+
+## 1: Data Preparation
+
+### 1.1 Installing R packages
+
+We will be using the function `pacman::p_load` from the `pacman` package to install and call off multiple libraries from various R packages:
+
+```{r}
+pacman::p_load(tidyverse, ggstatsplot, ggridges, plotly, 
+               patchwork, scales, paletteer, viridis,
+               ggiraph, ggiraphExtra, gganimate, ggmosaic, 
+               gifski, ggpubr, ggdist, ggrain, GGally,
+               qqplotr, gt, ggpmisc,haven, webr,
+               transformr, Hmisc, vcd, knitr, 
+               kableExtra, DT, rstatix)
+```
+
+### 1.2 Filtering the Data
+
+As mentioned earlier, the **Student Questionnaire Data File** will be used for our analysis, however further filtering will need to be done as our main focus will be on **Singapore**. The following code chunk below filters the original dataset according to entries from Singapore only and outputs a separate file titled: **stu_qqq_SG**
+
+#### The Code
+
+```{r}
+#| eval: false
+
+stu_qqq <- read_sas("Data/cy08msp_stu_qqq.sas7bdat")
+
+```
+
+```{r}
+#| eval: false
+
+stu_qqq_SG <- stu_qqq %>%
+  filter(CNT =="SGP")
+
+```
+
+```{r}
+#| eval: false
+
+write_rds(stu_qqq_SG,
+          "Data/stu_qqq_SG.rds")
+
+```
+
+```{r}
+stu_qqq_SG <- read_rds("Data/stu_qqq_SG.rds")
+
+
+```
+
+#### Summary Statistics of the Filtered Dataset: *stu_qqq_SG*
+
+::: panel-tabset
+## Head of Filtered Dataset
+
+```{r}
+
+head(stu_qqq_SG,10)
+
+
+```
+
+There are a total of 6,066 rows and 1,279 variables available in our dataset.
+
+## Checking for Duplicates
+
+```{r}
+stu_qqq_SG[duplicated(stu_qqq_SG),]
+
+```
+
+From the output, there are no duplicated rows found in our dataset.
+:::
+
+### 1.3 Further Filtering of Dataset
+
+In the earlier section, we filtered our dataset to only show results from Singapore. However, there are still 1,279 variables - most of which that will not be required or used in our analysis. Therefore, we will select 14 variables for our first cut. Using the [code book](https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwebfs.oecd.org%2Fpisa2022%2FCY08MSP_CODEBOOK_5thDecember23.xlsx&wdOrigin=BROWSELINK) from OECD as reference, we would be select the features listed below using the `select` function and write it into another file.
+
+| Variable Column Names | Variable Labels                                        | Column Number |
+|-----------------------|--------------------------------------------------------|---------------|
+| CNTSTUID              | Student ID                                             | 4             |
+| ST004D01T             | Student (Standardized) Gender                          | 26            |
+| EXERPRAC              | Exercise or practice a sport before or after school    | 979           |
+| STUDYHMW              | Studying for school or homework before or after school | 980           |
+| WORKPAY               | Working for pay before or after school                 | 981           |
+| DURECEC               | Duration in early childhood education and care         | 987           |
+| RELATST               | Quality of student-teacher relationships (WLE)         | 990           |
+| MISCED                | Mother’s level of education (ISCED)                    | 1030          |
+| FISCED                | Father’s level of education (ISCED)                    | 1031          |
+| ICTAVSCH              | Availability and Usage of ICT at School                | 1051          |
+| PV1MATH               | Plausible Value 1 in Mathematics                       | 1167          |
+| PV1READ               | Plausible Value 1 in Read                              | 1177          |
+| PV1SCIE               | Plausible Value 1 in Science                           | 1187          |
+| ESCS                  | Index of economic, social and cultural status          | 1039          |
+
+#### Preparing the New Dataset
+
+The `select` function as shown in the code tab removes the unwanted variables (columns). This narrows down our dataset to the few variables selected.
+
+::: panel-tabset
+## Code used to Write New Dataset for Analysis
+
+### Selecting the Variables to Keep
+
+```{r}
+
+stu_qqq_SG_select_analysis <- stu_qqq_SG %>% 
+  select(4,26,979:981,987,990,1030,1031,1039,1051,1167,1177,1187)
+```
+
+### Writing the Dataset into a Reading File Type
+
+```{r}
+
+write_rds(stu_qqq_SG_select_analysis,
+          "Data/stu_qqq_SG_select_analysis.rds")
+```
+
+### Reading the New Dataset:
+
+```{r}
+
+stu_qqq_SG_select_analysis <- read_rds("Data/stu_qqq_SG_select_analysis.rds")
+
+```
+
+## Summary Statistics of Dataset: stu_qqq_SG_select_analysis
+
+::: {style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"}
+```{r}
+str(stu_qqq_SG_select_analysis)
+```
+:::
+:::
+
+### 1.4 Changing Data Types
+
+Based on the structure shown in Section 1.3, variables data types need to be corrected before we can correctly use them for analysis.
+
+::: panel-tabset
+## Variables Data Types to be Changed
+
+The table of variables below are classified as `num` which is for numerical continuous data. To correct to their respective data types, we will be using both `as.character` and `as.factor` . Click the next tab to view the code used.
+
+|                         |                      |
+|-------------------------|----------------------|
+| **Character Variables** | **Factor Variables** |
+| CNTSTUID                | ST004D01T            |
+| EXERPRAC                |                      |
+| STUDYHMW                |                      |
+| WORKPAY                 |                      |
+| DURECEC                 |                      |
+| RELATST                 |                      |
+| MISCED                  |                      |
+| FISCED                  |                      |
+| ICTAVSCH                |                      |
+
+## Code for Data Type Change
+
+```{r}
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(CNTSTUID = as.character(CNTSTUID))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(ST004D01T = as.factor(ST004D01T))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(EXERPRAC = as.character(EXERPRAC))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(STUDYHMW = as.character(STUDYHMW))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(WORKPAY = as.character(WORKPAY))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(DURECEC = as.character(DURECEC))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(RELATST = as.character(RELATST))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(MISCED = as.character(MISCED))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(FISCED = as.character(FISCED))
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(ICTAVSCH = as.character(ICTAVSCH))
+
+```
+
+This code here is to recode our gender variable for easier representation in plots for later sections.
+
+```{r}
+stu_qqq_SG_select_analysis <- stu_qqq_SG_select_analysis %>%
+  mutate(ST004D01T=recode(ST004D01T,"1" = "Female","2"="Male"))
+```
+
+## Structure of New Dataset
+
+::: {style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"}
+```{r}
+
+str(stu_qqq_SG_select_analysis)
+
+```
+:::
+:::
+
+## 2: Visual Summary and Observations
+
+::: callout-important
+**The following observations are based on surface level understanding of the data provided by the PISA survey. As this exercise is used for practice, do use the information below provided with a pinch of salt.**
+:::
+
+### 2.1 Distribution of PV Scores
+
+The panel below displays the distribution of the three Plausible Value 1 (PV1) values that are being used in this study. The plots have been further split between both males and females to further understand distribution of these scores between both genders.
+
+Based on the three distribution charts below, it can be observed that the distribution of PV1 values between both male and female are relatively similar. This does not provide sufficient insight for us to achieve the task that was set out in the beginning.
+
+::: callout-note
+Reminder of the Task at Hand:
+
+-   the distribution of Singapore students’ performance in mathematics, reading, and science, and
+
+-   the relationship between these performances with schools, gender and socioeconomic status of the students.
+:::
+
+::: panel-tabset
+## PV1Math Distribution
+
+```{r, echo=FALSE}
+
+p1 <- ggplot(stu_qqq_SG_select_analysis, 
+       aes(x= PV1MATH, 
+           fill = ST004D01T)) +
+  geom_histogram(aes(y=..density..),
+                 bins=20, 
+                 color="grey30",
+                 position="identity",
+                 alpha=0.3)
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+             aes(x=PV1MATH))+
+  geom_histogram()
+
+(p1 + inset_element(p2, 
+                   left = 0.7, 
+                   bottom = 0.7, 
+                   right = 1, 
+                   top = 1))
+```
+
+## PV1Math Code
+
+```{r, eval=FALSE}
+
+p1 <- ggplot(stu_qqq_SG_select_analysis, 
+       aes(x= PV1MATH, 
+           fill = ST004D01T)) +
+  geom_histogram(aes(y=..density..),
+                 bins=20, 
+                 color="grey30",
+                 position="identity",
+                 alpha=0.3)
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+             aes(x=PV1MATH))+
+  geom_histogram()
+
+(p1 + inset_element(p2, 
+                   left = 0.7, 
+                   bottom = 0.7, 
+                   right = 1, 
+                   top = 1))
+```
+
+## PV1READ Distribution
+
+```{r, echo=FALSE}
+p1 <- ggplot(stu_qqq_SG_select_analysis, 
+       aes(x= PV1READ, 
+           fill = ST004D01T)) +
+  geom_histogram(aes(y=..density..),
+                 bins=20, 
+                 color="grey30",
+                 position="identity",
+                 alpha=0.3)
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+             aes(x=PV1READ))+
+  geom_histogram()
+
+(p1  + inset_element(p2, 
+                   left = 0.7, 
+                   bottom = 0.7, 
+                   right = 1, 
+                   top = 1))
+```
+
+## PV1READ Code
+
+```{r, eval=FALSE}
+p1 <- ggplot(stu_qqq_SG_select_analysis, 
+       aes(x= PV1READ, 
+           fill = ST004D01T)) +
+  geom_histogram(aes(y=..density..),
+                 bins=20, 
+                 color="grey30",
+                 position="identity",
+                 alpha=0.3)
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+             aes(x=PV1READ))+
+  geom_histogram()
+
+(p1  + inset_element(p2, 
+                   left = 0.7, 
+                   bottom = 0.7, 
+                   right = 1, 
+                   top = 1))
+```
+
+## PV1SCIE Distribution
+
+```{r, echo=FALSE}
+p1 <- ggplot(stu_qqq_SG_select_analysis, 
+       aes(x= PV1SCIE,fill=ST004D01T)) +
+  geom_histogram(aes(y=..density..),
+                 bins=20, 
+                 color="grey30",
+                 position="identity",
+                 alpha=0.3)
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+             aes(x=PV1SCIE))+
+  geom_histogram()
+
+(p1 + inset_element(p2, 
+                   left = 0.7, 
+                   bottom = 0.7, 
+                   right = 1, 
+                   top = 1))
+```
+
+## PV1SCIE Code
+
+```{r,eval=FALSE}
+p1 <- ggplot(stu_qqq_SG_select_analysis, 
+       aes(x= PV1SCIE,fill=ST004D01T)) +
+  geom_histogram(aes(y=..density..),
+                 bins=20, 
+                 color="grey30",
+                 position="identity",
+                 alpha=0.3)
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+             aes(x=PV1SCIE))+
+  geom_histogram()
+
+(p1 + inset_element(p2, 
+                   left = 0.7, 
+                   bottom = 0.7, 
+                   right = 1, 
+                   top = 1))
+```
+:::
+
+### 2.2 Correlations between Socioeconimic Index (ESCS) and Plausible Values (PVs)
+
+In this next section, a scatter plot is used to see if there is any correlation between the Socioeconomic Index (ESCS) and various PV1s in Math, Reading and Science.
+
+Based on the three plots shown below, it can be deduced that the ESCS has a positive correlation with the PV scores. This means that the higher the economic, social and cultural status of the individual, the higher probability with reason that they would perform better for the PISA test.
+
+The ESCS index provides a materialistic comparison between individuals and provides, at most, a good understanding of the individuals environment. However, this measure is not entirely accurate as there are various components involved that can be biased to the country itself.To properly understand the usefulness of ESCS and its correlation to the PVs, more information would need to be provided and analyzed in detail.
+
+::: panel-tabset
+## Plots
+
+```{r, echo=FALSE}
+
+p1 <- ggplot(stu_qqq_SG_select_analysis,
+       aes(ESCS, PV1MATH))+
+  geom_point(alpha =  0.1, color ="blue")+
+  theme_classic()+
+  geom_smooth(method=lm,se=FALSE)+
+  stat_cor(method="pearson",label.x=-3, label.y=760)
+
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+       aes(ESCS, PV1READ))+
+  geom_point(alpha =  0.1, color ="red")+
+  theme_classic()+
+  geom_smooth(method=lm,se=FALSE)+
+  stat_cor(method="pearson",label.x=-3, label.y=760)
+
+p3 <- ggplot(stu_qqq_SG_select_analysis,
+       aes(ESCS, PV1SCIE))+
+  geom_point(alpha =  0.1, color ="green")+
+  theme_classic()+
+  geom_smooth(method=lm,se=FALSE)+
+  stat_cor(method="pearson",label.x=-3, label.y=760)
+
+p1 + plot_spacer() + p2 + plot_spacer() + p3 + plot_spacer()
+  
+```
+
+## Code
+
+```{r, eval=FALSE}
+
+p1 <- ggplot(stu_qqq_SG_select_analysis,
+       aes(ESCS, PV1MATH))+
+  geom_point(alpha =  0.1, color ="blue")+
+  theme_classic()+
+  geom_smooth(method=lm,se=FALSE)+
+  stat_cor(method="pearson",label.x=-3, label.y=760)
+
+p2 <- ggplot(stu_qqq_SG_select_analysis,
+       aes(ESCS, PV1READ))+
+  geom_point(alpha =  0.1, color ="red")+
+  theme_classic()+
+  geom_smooth(method=lm,se=FALSE)+
+  stat_cor(method="pearson",label.x=-3, label.y=760)
+
+p3 <- ggplot(stu_qqq_SG_select_analysis,
+       aes(ESCS, PV1SCIE))+
+  geom_point(alpha =  0.1, color ="green")+
+  theme_classic()+
+  geom_smooth(method=lm,se=FALSE)+
+  stat_cor(method="pearson",label.x=-3, label.y=760)
+
+p1 + plot_spacer() + p2 + plot_spacer() + p3 + plot_spacer()
+  
+```
+:::
+
+### 2.3 Distribution of Variables Categorized by Gender
+
+In this next two section, various barplots and boxplots will be used to visualize the distribution of how each gender has answered in the PISA tests for various socioeconomic components. Based on this, we can then use it together with the next section in the hopes of obtaining better insight between perfomance and socioeconomic status.
+
+::: callout-note
+The following sections will use Math PV1 for all of its measures in performance as based on our earlier section, the distribution between the scores are similar between both male and female.
+:::
+
+::: panel-tabset
+## Number of times Students Exercise or Practice a Sport after School
+
+```{r}
+
+ggplot(stu_qqq_SG_select_analysis, 
+       aes(x = EXERPRAC, fill=ST004D01T))+
+  geom_bar(position="dodge")
+
+
+```
+
+| Legend | Description                                       |
+|--------|---------------------------------------------------|
+| 0      | No exercise or sports                             |
+| 1      | 1 time of exercising or sports per week           |
+| 2      | 2 time of exercising or sports per week           |
+| 3      | 3 time of exercising or sports per week           |
+| 4      | 4 time of exercising or sports per week           |
+| 5      | 5 time of exercising or sports per week           |
+| 6      | 6 time of exercising or sports per week           |
+| 7      | 7 time of exercising or sports per week           |
+| 8      | 8 time of exercising or sports per week           |
+| 9      | 9 time of exercising or sports per week           |
+| 10     | 10 or more times of exercising or sports per week |
+
+## Studying for school or homework before or after school
+
+```{r}
+ggplot(stu_qqq_SG_select_analysis, 
+       aes(x = STUDYHMW, fill=ST004D01T))+
+  geom_bar(position ="dodge")
+```
+
+| Legend | Description                        |
+|--------|------------------------------------|
+| 0      | No studying                        |
+| 1      | 1 time of studying per week        |
+| 2      | 2 times of studying per week       |
+| 3      | 3 times of studying per week       |
+| 4      | 4 times of studying per week       |
+| 5      | 5 times of studying per week       |
+| 6      | 6 times of studying per week       |
+| 7      | 7 times of studying per week       |
+| 8      | 8 times of studying per week       |
+| 9      | 9 times of studying per week       |
+| 10     | 10 or more times of study per week |
+
+## Working for pay before or after school
+
+```{r}
+ggplot(stu_qqq_SG_select_analysis, 
+       aes(x = WORKPAY, fill=ST004D01T))+
+  geom_bar(position ="dodge")
+```
+
+| Legend | Description                                  |
+|--------|----------------------------------------------|
+| 0      | No work for pay                              |
+| 1      | 1 time of working for pay per week           |
+| 2      | 2 times of working for pay per week          |
+| 3      | 3 times of working for pay per week          |
+| 4      | 4 times of working for pay per week          |
+| 5      | 5 times of working for pay per week          |
+| 6      | 6 times of working for pay per week          |
+| 7      | 7 times of working for pay per week          |
+| 8      | 8 times of working for pay per week          |
+| 9      | 9 times of working for pay per week          |
+| 10     | 10 or more times of working for pay per week |
+
+## Duration in early childhood education and care
+
+```{r}
+ggplot(stu_qqq_SG_select_analysis, 
+       aes(x = DURECEC, fill=ST004D01T))+
+  geom_bar(position ="dodge")
+```
+
+| Legend | Description                                                |
+|--------|------------------------------------------------------------|
+| 0      | Attended ECEC for less than a year                         |
+| 1      | Attended ECEC for at least one but less than two years     |
+| 2      | Attended ECEC for at least two but less than three years   |
+| 3      | Attended ECEC for at least three but less than four years  |
+| 4      | Attended ECEC for at least four but less than five years   |
+| 5      | Attended ECEC for at least five but less than six years    |
+| 6      | Attended ECEC for at least six but less than seven years   |
+| 7      | Attended ECEC for at least seven but less than eight years |
+| 8      | Attended ECEC for at least eight years                     |
+
+## Availability and Usage of ICT at School
+
+```{r}
+ggplot(stu_qqq_SG_select_analysis, 
+       aes(x = ICTAVSCH, fill=ST004D01T))+
+  geom_bar(position ="dodge")
+
+```
+
+| Legend | Description                          |
+|--------|--------------------------------------|
+| 0      | No ICT resources available at school |
+| 1      | 1 ICT resource available at school   |
+| 2      | 1 ICT resource available at school   |
+| 3      | 1 ICT resource available at school   |
+| 4      | 1 ICT resource available at school   |
+| 5      | 1 ICT resource available at school   |
+| 6      | 1 ICT resource available at school   |
+| 7      | 1 ICT resource available at school   |
+:::
+
+### 2.4 Box Plots
+
+::: panel-tabset
+## Number of times Students Exercise or Practice a Sport after School
+
+```{r}
+ggplot(data=stu_qqq_SG_select_analysis,
+       aes(EXERPRAC, PV1MATH))+
+  geom_boxplot(alpha=0,aes(colour=ST004D01T))
+  
+```
+
+## Studying for school or homework before or after school
+
+```{r}
+ggplot(data=stu_qqq_SG_select_analysis,
+       aes(STUDYHMW, PV1MATH))+
+  geom_boxplot(alpha=0,aes(colour=ST004D01T))
+  
+```
+
+## Working for pay before or after school
+
+```{r}
+ggplot(data=stu_qqq_SG_select_analysis,
+       aes(WORKPAY, PV1MATH))+
+  geom_boxplot(alpha=0,aes(colour=ST004D01T))
+  
+```
+
+## Duration in early childhood education and care
+
+```{r}
+ggplot(data=stu_qqq_SG_select_analysis,
+       aes(DURECEC, PV1MATH))+
+  geom_boxplot(alpha=0,aes(colour=ST004D01T))
+  
+```
+
+## Availability and Usage of ICT at School
+
+```{r}
+ggplot(data=stu_qqq_SG_select_analysis,
+       aes(ICTAVSCH, PV1MATH))+
+  geom_boxplot(alpha=0,aes(colour=ST004D01T))
+  
+```
+:::
+
+## 3: Summary
+
+The analysis and study can be summarized in the various points listed below.
+
+-   The distribution of performance between male and female in Singapore do not differ as much on a whole
+
+-   There is a positive correlation between the Socioeconic Index (ESCS) and performance of students.
+
+-   There is no discernible trend between increased exercises and performance.
+
+-   There is a slight increasing trend when more time is spent studying or doing homework before or after school. More insights can be obtained if we can can compare between the length of each study and how it affects the performance of each individual.
+
+-   There is a decreasing trend in performance when individuals spend more time working for pay.
+
+-   There is no discernible trend between length of early childhood studies and performance. However, it is noted that males have a tendency of not performing as well when they do not have early childhood education.
+
+-   There is a slight trend in increasing performance if the school has more infocomm technology available for the students. However, this information is insufficient as there is no measure on how often do students access these for learning.
+
+## References
+
+Below are the matereials that were used as reference for the creation of this article:
+
+-   [Statology](https://www.statology.org/ggplot-legend-labels/)
+
+-   [R-Charts](https://r-charts.com/ggplot2/legend/)
+
+-   [https://ggplot2-book.org/scales-guides#sec-scale-names](GGplot)
+
+-   [https://patchwork.data-imaginist.com/reference/inset_element.html](Patchwork)
+
+-   [Prof Kam - R4Eva](https://r4va.netlify.app/chap02)
+
+-   [https://ggplot2.tidyverse.org/reference/geom_bar.html](GGPlot2%20-%20Tidyverse)
+
+-   [OECD](https://www.oecd.org/pisa/data/2022database/)
+
+-   The measure of socio-economic status in PISA: a review and some suggested improvements by Francesco Avvisati Published: 06 June 2020, Large-scale Assessments in Education volume 8, Article number: 8 (2020), Springer

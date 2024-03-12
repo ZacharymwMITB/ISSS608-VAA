@@ -1,0 +1,377 @@
+---
+title: "Take Home Exercise 3"
+author: "Zachary Wong"
+date: 14.02.2024
+date-modified: "last-modified"
+toc: true
+execute: 
+  eval: false
+  echo: false
+  warning: false
+editor: visual
+code-overflow: wrap
+---
+
+# The Task
+
+In this take home exercise, the requirements are as of below:
+
+-   Select a weather station and download [historical daily temperature or rainfall data](http://www.weather.gov.sg/climate-historical-daily/) from [Meteorological Service Singapore](http://www.weather.gov.sg/home/) website,
+
+-   Select either daily temperature or rainfall records of a month of the year 1983, 1993, 2003, 2013 and 2023 and create an analytics-driven data visualisation,
+
+-   Apply appropriate interactive techniques to enhance the user experience in data discovery and/or visual story-telling.
+
+# Background
+
+The Ministry of Sustainability and the Environment has released and infographic stating that the daily mean temperature in the coming years are projected to increase by 1.4 to 4.6, and the contrast between the wet months (November to January) and dry months (February and June to September) is likely to be more pronounced.
+
+[![Source: Ministry of Sustainability and the Environment](images/clipboard-3246032099.png)](https://www.asiaone.com/sites/default/files/Infographics%20on%20Climate%20Change.pdf)
+
+# The Data
+
+According to the World Meteorological Organisation (WMO) guidelines, a climate station monitors the climate over a long-term period to provide data that enables detection of climate change signals at a national level. The location of such stations should be located relatively far away from large urban centers and store minimally 30 years of rainfall and temperature data.
+
+In Singapore, the climate station has been shifted several times since its inception approximately 140 years ago. The Table below shows the previous locations of where the stations used to be and is currently.
+
+[![Location of Singapore Climate Stations](images/clipboard-2430238600.png)](http://www.weather.gov.sg/learn_climate/)
+
+For our study, the data will be obtained from the [Meteorological Service Singapore's website](http://www.weather.gov.sg/climate-historical-daily/). According to the infographic earlier, it was mentioned that contrast between the wet and dry months would prove to be the most pronounced in seeing changes. Therefore, the month chosen would be December for the years in focus. Additionally, the rainfall data will be used for our analysis.
+
+## Downloading of Data
+
+The following information was used to select and download the data from the Meteorological Service Singapore's website:
+
+-   Station selected: Serangoon
+
+-   Month selected: December
+
+-   Output Files (in CSV):
+
+    | File Name            | Description                     |
+    |----------------------|---------------------------------|
+    | DAILYDATA_S36_198312 | Weather Data from December 1983 |
+    | DAILYDATA_S36_199312 | Weather Data from December 1983 |
+    | DAILYDATA_S36_200312 | Weather Data from December 1983 |
+    | DAILYDATA_S36_201312 | Weather Data from December 1983 |
+    | DAILYDATA_S36_202312 | Weather Data from December 1983 |
+
+## Launching R Packages
+
+As we move through the analysis, additional packages maybe installed and run at a later time. For exploration, the following libraries will be run first:
+
+-   Tidyverse
+
+-   Patchwork
+
+-   Plotly
+
+-   Crosstalk
+
+-   DT
+
+-   ggdist
+
+-   ggridges
+
+-   ggstatsplot
+
+-   ggthemes
+
+-   dplyr
+
+-   plyr
+
+-   readr
+
+-   gganimate
+
+-   ggiraph
+
+```{r}
+#| code-fold: true
+
+pacman::p_load(tidyverse, patchwork, plotly, crosstalk, DT, ggdist,
+               ggridges, ggstatsplot, ggthemes, dplyr, plyr, readr, gganimate,
+               ggiraph, ggplot2, hrbrthemes,haven)
+
+```
+
+## Importing and Preparing the Data for Analysis
+
+Based on the 5 files downloaded, some pre-preparation of data had to be done before being able to input into R due to a symbol in the documents. All the dashes (-) and degree (°) symbols in the document has been replaced with the value "0" and removed respectively as the read_csv function could not parse these symbols.
+
+The columns will later be dropped from our study as there were no records for them:
+
+-   Highest 30 Min Rainfall (mm)
+
+-   Highest 60 Min Rainfall (mm)
+
+-   Highest 120 Min Rainfall (mm)
+
+-   Mean Temperature (°C)
+
+-   Maximum Temperature (°C)
+
+-   Minimum Temperature (°C)
+
+-   Mean Wind Speed (km/h)
+
+-   Max Wind Speed (km/h)
+
+### Reading the File
+
+```{r}
+read_csv("data/DAILYDATA_S36_198312.csv") 
+read_csv("data/DAILYDATA_S36_199312.csv") 
+read_csv("data/DAILYDATA_S36_200312.csv") 
+read_csv("data/DAILYDATA_S36_201312.csv") 
+read_csv("data/DAILYDATA_S36_202312.csv") 
+```
+
+### Combining the Files
+
+```{r}
+December_rainfall <- list.files(path = "data",
+                                pattern = "*.csv", full.names = TRUE) %>%
+  lapply(read_csv) %>%
+  bind_rows
+
+December_rainfall
+
+
+
+
+```
+
+### Selecting the Columns to Keep
+
+```{r}
+
+December_rainfall_filtered <- December_rainfall %>%
+  select(Year, Day, `Daily Rainfall Total (mm)`)
+
+December_rainfall_filtered <- December_rainfall_filtered %>%
+  mutate(Year = as.factor(Year))
+
+
+
+```
+
+```{r}
+str(December_rainfall_filtered)
+
+
+```
+
+Next, we will inspect the new data table for any duplicates and checking that the columns have been correctly selected.
+
+```{r}
+
+
+December_rainfall_filtered[duplicated(December_rainfall_filtered),]
+```
+
+```{r}
+
+DT::datatable(December_rainfall_filtered, class = "cell-border stripe",
+              rownames = FALSE)
+```
+
+## Visualizing the Data
+
+Since we inspected and confirmed that the data has no duplicate and all values are provided, we will explore the data that we have through various visualizations to understand the data better.
+
+### Daily Rainfall in December By Year
+
+```{r}
+#| code-fold: true
+
+December_rainfall_total <- December_rainfall_filtered %>%
+  group_by(Year) %>%
+  summarise(
+    MeanRainFall = mean(`Daily Rainfall Total (mm)`, na.rm = TRUE),
+    TotalRainFall = sum(`Daily Rainfall Total (mm)`, na.rm = TRUE)
+  )
+
+```
+
+```{r}
+#| code-fold: true
+#| fig-width: 12
+#| fig-height: 8
+
+
+dailyrainfall_dec <- ggplot(December_rainfall_filtered,
+                            aes(x = Day, y = `Daily Rainfall Total (mm)`, color = Year)) +
+  geom_point() +
+  facet_wrap(~Year, nrow = 1)+
+  labs(title = "Daily Rainfall in December by Year",
+       x = "Day of the Month",
+       y = "Amount of Rainfall (in mm)") +
+  theme_few()
+
+p1 <- dailyrainfall_dec  +
+  geom_rect(xmin = -Inf,
+            xmax = Inf,
+            ymin = -Inf,
+            ymax = December_rainfall_total$MeanRainFall,
+            fill = "grey80",
+            alpha = 0.05,
+            color = NA) +
+  geom_hline(yintercept = December_rainfall_total$MeanRainFall, linetype = "dashed", color = "red") +
+  theme_few()
+
+p2 <- ggplot(December_rainfall_filtered,
+                           aes(x = Day, y=December_rainfall_filtered$`Daily Rainfall Total (mm)`, fill = Year)) +
+  facet_wrap(~Year, nrow = 1) +
+  geom_boxplot(wdith=.20,
+               outlier.colour = "grey30",
+               outlier.size = 2,
+               outlier.alpha = 0.5) +
+  theme_few() +
+  labs(y = "Amount of Rainfall (in mm)",
+       x = "Day of the Month") +
+  plot_layout(guides = "collect")
+
+p1 / p2
+```
+
+Based on the charts above, the frequency of rainfall above the total average across 5 years seem to be increasing with the exception of year 2023. For year 2023, it is significantly different from the previous selected years as there was only 1 incident of rainfall throughout the entire month.
+
+As the year is an outlier, we will not take into account 2023's year into our comparison and analysis.
+
+Another observation from the above charts is that even though the frequency of rainfall above the total average is increasing, the mean of rainfall across each individual year do not seem to be very much different.
+
+```{r}
+#| code-fold: true
+p3 <- ggplot(December_rainfall_filtered,
+                           aes( y=December_rainfall_filtered$`Daily Rainfall Total (mm)`, fill = Year)) +
+  facet_grid(~Year) +
+  geom_boxplot(width=.20,
+               outlier.shape = NA) +
+  scale_y_continuous(limits = c(0,55)) +
+  theme_few() +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
+  labs(y = "Amount of Rainfall (in mm)")
+
+p3
+```
+
+The above chart is a representation of the earlier chart with the outliers removed to have a clearer look at the average of rainfall for each year. Even though there was an increase in frequency of higher than average rainfall, the year-by-year comparison does not show any significant increase as what the infographic mentions.
+
+However, according to the bar chart below, there was an increase in total rainfall for the month of December across the years.
+
+```{r}
+#| code-fold: true
+
+aggregate(December_rainfall_filtered$`Daily Rainfall Total (mm)`, list(December_rainfall_filtered$Year), FUN=sum)
+
+aggregate(December_rainfall_filtered$`Daily Rainfall Total (mm)`, list(December_rainfall_filtered$Year), FUN=mean)
+```
+
+```{r}
+#| code-fold: true
+Rainfall_Stats <- data.frame(
+  Year = c(1983,1993,2003,2013,2023),
+  Mean = c(9.32, 10.55, 9.71, 16.65,
+           0.53),
+  Total = c(288.9,326.9,301.1,516,16.4)
+)
+
+str(Rainfall_Stats)
+```
+
+```{r,echo=FALSE}
+Rainfall_Stats <- Rainfall_Stats %>%
+  mutate(Year = as.factor(Year))
+```
+
+```{r}
+#| code-fold: true
+p4 <- ggplot(Rainfall_Stats,
+       aes(x = Year,
+           y = Total, fill = Year)) +
+  geom_bar(stat = "identity") +
+  theme_few ()
+
+p4
+```
+
+## Interactive Visualization
+
+Based on the first chart, the next 2 charts will be an interactive version of it. One to show the changes across time and another that can provide selection of information in the hopes of enhancing the analysis.
+
+### Interactive Chart 1
+
+::: callout-warning
+The interactive chart below is meant to show various rainfall across the years, however due to an error in R, the column "Year" (factor) is currently not being recognized correctly. This has proved to be of much hindrance for this study and interactivity.
+:::
+
+```{r}
+#| code-fold: true
+gg1 <- ggplot(December_rainfall_filtered, 
+       aes(x = Day, 
+           y = `Daily Rainfall Total (mm)`)) +
+  geom_point(aes(frame = Year, 
+                 text = paste("Year:", Year, "Day:", Day, "<br>Rainfall Total (mm):", `Daily Rainfall Total (mm)`),
+                 color = `Daily Rainfall Total (mm)`),
+             alpha = 0.7, 
+             show.legend = FALSE) +
+  scale_size(range = c(2, 12)) +
+  scale_color_gradient(low = "navy", high = "red") +
+  geom_hline(yintercept = December_rainfall_total$MeanRainFall, linetype = "dashed", color = "red") +
+  theme_few() +
+  labs(x = 'Day', 
+       y = 'Rainfall Total (mm)')
+ggplotly(gg1, tooltip = c("text"))
+```
+
+### Interactive Chart 2
+
+```{r}
+#| code-fold: true
+ p1 + transition_states (Day, wrap=FALSE) +
+   shadow_mark()
+```
+
+### Additional Interactivity and Other EDA of Data
+
+```{r}
+#| code-fold: true
+p4 + transition_states(Year, wrap=FALSE) +
+  shadow_mark() +
+  enter_grow() +
+  enter_fade ()
+```
+
+```{r}
+#| code-fold: true
+
+p5 <- ggplot(December_rainfall_filtered,
+                            aes(x = Day, 
+                                y = `Daily Rainfall Total (mm)`, 
+                                color = Year)) +
+  geom_point(
+    aes(text = paste(
+                      "Year:", Year, 
+                     "Day:", Day, 
+                     "Rainfall (mm):",`Daily Rainfall Total (mm)` )),
+    alpha = 0.9) +
+  facet_wrap(~Year, nrow = 1)+
+  labs(title = "Daily Rainfall in December by Year",
+       x = "Day of the Month",
+       y = "Amount of Rainfall (in mm)") +
+  theme_few()
+
+p6 <- p5  +
+  geom_hline(yintercept = December_rainfall_total$MeanRainFall, linetype = "dashed", color = "red") +
+  theme_few()
+
+
+ggplotly(p6, tooltip = c("text"))
+  
+
+
+```

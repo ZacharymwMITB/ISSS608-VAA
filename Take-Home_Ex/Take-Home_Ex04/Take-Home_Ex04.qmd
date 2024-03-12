@@ -1,0 +1,315 @@
+---
+title: "Take Home Exercise 4"
+author: "Zachary Wong"
+date: 03.03.2024
+date-modified: "last-modified"
+toc: true
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+code-overflow: wrap
+code-fold: true
+---
+
+# **Prototyping Modules for Visual Analytics Shiny Application**
+
+::: callout-important
+## Prototyping is Crucial
+
+Prototyping first may help keep you from investing far too much time for marginal gains.
+
+*The Art of UNIX Programming (Raymond 2003)*
+:::
+
+## The Task
+
+In this take-home exercise, you are required to select one of the module of your proposed Shiny application and complete the following tasks:
+
+-   To evaluate and determine the necessary R packages needed for your Shiny application are supported in R CRAN,
+
+-   To prepare and test the specific R codes can be run and returned the correct output as expected,
+
+-   To determine the parameters and outputs that will be exposed on the Shiny applications, and
+
+-   To select the appropriate Shiny UI components for exposing the parameters determine above.
+
+All teams must consult the [prototype](https://habaritanzania.netlify.app/) page of [AY2022-2023 January Term Group 3: Tanzania Tourism Analysis](https://thehabaritanzania.netlify.app/). There are three main modules in ths application the are: [Exploratory Data Analysis](https://habaritanzania.netlify.app/eda/eda) & [Confirmatory Data Analysis](https://habaritanzania.netlify.app/eda/cda), [Cluster Analysis](https://habaritanzania.netlify.app/analysis/clustering) and [Decision Tree Analysis](https://habaritanzania.netlify.app/analysis/decision_tree). Each of them were prepared by one of the member of the project team. After that they combined them into the Prototype page of their project website.
+
+Take-home Exercise 4 will be similar to one of the prototype module prepared above in term of content but with the following differences:
+
+-   You are required to prepare the prototype module report as Take-home Exercise 4 submission. This mean, it has to be published on your own coursework page.
+
+-   You are required to include a section called UI design for the different components of the UIs for the proposed design.
+
+For storyboarding the UI Design, please consult [Storyboard](https://giniceseah.netlify.app/posts/2021-07-31-storyboard/) link.
+
+## Submission Instructions
+
+This is an individual assignment. You are required to work on the take-home exercises and prepare submission individually.
+
+The specific submission instructions are as follows:
+
+-   The analytical visualisation must be prepared by using **R and appropriate R packages**. The report must provide detail discussion and explanation of:
+
+    -   the data preparation process,
+
+    -   the selection of data visualisation techniques used,
+
+    -   and the data visualisation design and interactivity principles and best practices implemented.
+
+-   The write-up of the take-home exercise must be in **Quarto html document** format and publish on **Netlify**.
+
+# Topic: Decoding Chaos
+
+The topic our group has chosen is about terrorist attacks in Myanmar. The aim is to attempt to review through the open-sourced data obtained using various visual analytics techniques and possibly be able to weed out interesting conclusions. The shiny app would be create an analytical user interface whereby users are able to filter and explore by themselves if they can derive their own conclusion through their own assumptions and exploration.
+
+Our main project website can be found [here](https://vaa-group5-project.netlify.app/projectproposal/projectproposal).
+
+## The Dataset
+
+The dataset is obtained from Armed Conflict Location & Event Data Project [website](https://acleddata.com/). The website provides datasets of conflict in various regions which users can obtain to conduct their own data analysis based on the region they are interested in. The datasets can also be used to conduct geospatial analysis which is something that is still developing and improving over time.
+
+For our project, we would be mainly focusing on the Myanmar region due to the recent increase in conflict in that country due to the ongoing Civil War which began in 2021.
+
+The data being used is titled *2010-01-01-2023-12-31-Southeast_Asia-Myanmar.csv.*
+
+### Installing and Launching R Packages
+
+```{r}
+
+pacman::p_load(shiny, tidyverse, shinydashboard,dplyr,
+               spatstat, spdep,
+               lubridate, leaflet,
+               plotly, DT, viridis,
+               ggplot2, sf, tmap, readr,
+               scales,ggthemes,gridExtra,knitr,data.table,
+               CGPfunctions, ggHoriPlot, patchwork)
+```
+
+### Data
+
+```{r}
+
+Myanmar <- read_csv("data/2010-01-01-2023-12-31-Southeast_Asia-Myanmar.csv")
+
+glimpse(Myanmar)
+```
+
+```{r}
+kable(head(Myanmar))
+```
+
+```{r}
+str(Myanmar)
+```
+
+Based on the information above, our dataset consists of 31 variables and 55,574 observations. The date range used for our study would be between 1st Jan 2010 to 31st Dec 2023. The detailed description and explanation of each variable can be found in the [codebook](https://acleddata.com/acleddatanew/wp-content/uploads/dlm_uploads/2023/06/ACLED_Codebook_2023.pdf) provided by ACLED.
+
+### Data Wrangling
+
+#### Adjusting Attributes
+
+The code below changes the attributes of some of the variables shown above so that we can properly use them for analysis
+
+```{r}
+
+Myanmar <- Myanmar %>%
+  mutate(year =factor(year))
+
+str(Myanmar)
+```
+
+## Exploratory Data Analysis
+
+```{r}
+Incident_Summary <- Myanmar %>%
+  group_by(year,disorder_type,event_type) %>%
+  summarize(
+    Total_incidents = n(),
+    Total_Fatalities = sum(fatalities, na.rm=TRUE)
+  )
+```
+
+::: callout-note
+#### Info on Code Chunk Above:
+
+The code above groups the *year, disorder type, and event type* together so that we can create a data table summarizing the total number of incidents for the year based on the disorder type and event type as well as a column totaling the amount of fatalities based on the same grouping selection
+:::
+
+### Summary of Incidents
+
+```{r}
+#| fig-width: 14
+#| fig-height: 8
+
+
+ggplot(Incident_Summary, 
+       aes(x = year, 
+           y = Total_incidents, 
+           color = event_type)) +
+  geom_point() +
+  facet_wrap(~event_type) + 
+  theme_minimal() +
+  labs(y = "Total Number of Incidents", x = "Years") +
+  theme(
+    panel.grid.major.y = element_line(color = "pink", linetype = 2),
+    strip.background = element_rect(fill = "black"),
+    strip.text = element_text(colour = "white"),
+    legend.position = "none"
+  )
+  
+```
+
+::: callout-note
+#### Takeaway from Chart Above
+
+Based on the chart above, it can be seen that there was an increase incidents for all incident types except for riot. The spikes in the increased incident can be attributed to the start of the Civil War within the country itself.
+
+With the civil unrest, the highest incidents occurs with protests and strategic developments.
+:::
+
+Next, we will look at the total amount of fatalities by *event_type*.
+
+```{r}
+#| fig-width: 14
+#| fig-height: 8
+
+
+ggplot(Incident_Summary, 
+       aes(x = year, y = Total_Fatalities, color = event_type)) +
+  geom_point() +
+  facet_wrap(~event_type) + 
+  theme_minimal() +
+  labs(y = "Total Number of Fatalities", x = "Years") +
+  theme(
+    panel.grid.major.y = element_line(color = "pink", linetype = 2),
+    strip.background = element_rect(fill = "black"),
+    strip.text = element_text(colour = "white"),
+    legend.position = "none"
+  )
+```
+
+To further understand the data above, we would now include the various regions (category "admin1" in the dataset"). However to visualize it clearer, more data wrangling would need to be done.
+
+### Additional Data Wrangling for Geo-Data
+
+```{r}
+ACLED_MMR_1 <- Myanmar %>%
+  mutate(admin1 = case_when(
+    admin1 == "Bago-East" ~ "Bago (East)",
+    admin1 == "Bago-West" ~ "Bago (West)",
+    admin1 == "Shan-North" ~ "Shan (North)",
+    admin1 == "Shan-South" ~ "Shan (South)",
+    admin1 == "Shan-East" ~ "Shan (East)",
+    TRUE ~ as.character(admin1)
+  ))
+```
+
+```{r}
+ACLED_MMR_1 <- Myanmar %>%
+  mutate(admin2 = case_when(
+    admin2 == "Yangon-East" ~ "Yangon (East)",
+    admin2 == "Yangon-West" ~ "Yangon (West)",
+    admin2 == "Yangon-North" ~ "Yangon (North)",
+    admin2 == "Yangon-South" ~ "Yangon (South)",
+    admin2 == "Mong Pawk (Wa SAD)" ~ "Tachileik",
+    admin2 == "Nay Pyi Taw" ~ "Det Khi Na",
+    admin2 == "Yangon" ~ "Yangon (West)",
+    TRUE ~ as.character(admin2)
+  ))
+```
+
+### Summary of Incidents against Fatalities by Region and Year
+
+```{r}
+Region_summary <- ACLED_MMR_1 %>%
+  group_by(year, admin1, event_type) %>%
+   summarize(
+    Total_incidents = n(),
+    Total_Fatalities = sum(fatalities, na.rm=TRUE)
+  )
+```
+
+```{r}
+#| fig-width: 14
+#| fig-height: 10
+
+
+gg1 <-  ggplot(Region_summary,
+              aes(x = admin1, y=Total_incidents,size = Total_Fatalities,  color = event_type)) +
+  geom_point(aes(frame = year)) +
+  theme_minimal() +
+  labs(y = "Total Number of Incidents", x = "Regions") +
+  theme(axis.text.x = element_blank())
+
+ggplotly(gg1)
+```
+
+::: callout-note
+#### Takeaway from Chart Above
+
+The chart above builds on the earlier summary of incidents and fatalities where it further splits the event types according to region. As you move the slider through the years, it seems that some regions have increased incidents as well as fatalities depending on the event type.
+
+What is interesting to see is that at the start of 2021, there was an increased number of protests where in most regions but as time progressed the number dropped. This drop in number of protest eventually led to other types of events being increased such as battles which also has the higher amount of fatalities as compared to other event types.
+
+Next, we would do some Confirmatory Data Analysis to see if what we see above is true.
+:::
+
+## Confirmatory Data Analysis
+
+This next section would delve more into confirmatory data analysis where we would be testing for statistical significance based on a few null hypothesis that would be described according to the EDA portion in the earlier section. For the analysis and comparisons, we would mainly be using `ggstatsplot` package for analysis.
+
+```{r}
+#| code-summary: Launching ggstats package
+
+pacman::p_load(ggstatsplot, corrplot)
+```
+
+### Hypothesis 1
+
+Null Hypothesis: Is specific event types more correlated with number of fatalities?
+
+In order to test the above hypothesis, there would be some data wrangling that needs to be done first.
+
+```{r}
+Incident_hypo1 <- Myanmar %>%
+  group_by(event_type,year) %>%
+  summarize(
+    Total_incidents = n(),
+    Total_Fatalities = sum(fatalities, na.rm=TRUE)
+  )
+```
+
+```{r}
+gg2 <- ggplot(Incident_hypo1,
+              aes(x = year, y = Total_incidents)) +
+  geom_boxplot() +
+  stat_summary(geom = "point",       
+               fun.y="mean",         
+               colour ="red",        
+               size=2)
+
+
+gg2
+  
+
+```
+
+```{r}
+#| warning: false
+#| fig-width: 10
+#| fig-height: 16
+
+
+ ggstatsplot::grouped_ggbetweenstats(Incident_hypo1, 
+              x = year, 
+              y = Total_incidents,
+              grouping.var = event_type,
+              type = "np",
+              pairwise.display = "s",
+              pairwise_comparisons = TRUE,
+              p.adjust.method = "fdr",
+              output = "plot")
+```

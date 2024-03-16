@@ -63,7 +63,7 @@ The specific submission instructions are as follows:
 
 # Topic: Decoding Chaos
 
-The topic our group has chosen is about terrorist attacks in Myanmar. The aim is to attempt to review through the open-sourced data obtained using various visual analytics techniques and possibly be able to weed out interesting conclusions. The shiny app would be create an analytical user interface whereby users are able to filter and explore by themselves if they can derive their own conclusion through their own assumptions and exploration.
+The topic our group has chosen is about armed conflicts in Myanmar. The aim is to attempt to review through the open-sourced data obtained using various visual analytics techniques and possibly be able to weed out interesting conclusions. The shiny app would be create an analytical user interface whereby users are able to filter and explore by themselves if they can derive their own conclusion through their own assumptions and exploration.
 
 Our main project website can be found [here](https://vaa-group5-project.netlify.app/projectproposal/projectproposal).
 
@@ -71,7 +71,7 @@ Our main project website can be found [here](https://vaa-group5-project.netlify.
 
 The dataset is obtained from Armed Conflict Location & Event Data Project [website](https://acleddata.com/). The website provides datasets of conflict in various regions which users can obtain to conduct their own data analysis based on the region they are interested in. The datasets can also be used to conduct geospatial analysis which is something that is still developing and improving over time.
 
-For our project, we would be mainly focusing on the Myanmar region due to the recent increase in conflict in that country due to the ongoing Civil War which began in 2021.
+For our project, we would be mainly focusing on the Myanmar region due to the recent increase in conflict post military coup in 2021.
 
 The data being used is titled *2010-01-01-2023-12-31-Southeast_Asia-Myanmar.csv.*
 
@@ -109,6 +109,10 @@ Based on the information above, our dataset consists of 31 variables and 55,574 
 
 ### Data Wrangling
 
+![](images/clipboard-4164646881.png)
+
+The flowchart above shows some of the additional variables that will be created and used in this project.
+
 #### Adjusting Attributes
 
 The code below changes the attributes of some of the variables shown above so that we can properly use them for analysis
@@ -118,14 +122,56 @@ The code below changes the attributes of some of the variables shown above so th
 Myanmar <- Myanmar %>%
   mutate(year =factor(year))
 
+Myanmar$event_date <- dmy(Myanmar$event_date)
+
 str(Myanmar)
+```
+
+#### Filtering Data Columns
+
+The code chunk below creates a new dataset whilst removing those not being used in the study
+
+```{r}
+Myanmar_final <- Myanmar %>%
+  select(-time_precision, -geo_precision, -source_scale, -timestamp, -tags)
+
+```
+
+#### Geo-data Wrangling
+
+Due to the changes of some of the township names through the years, the following code chunk below corrects them such that they can be recognized.
+
+```{r}
+ACLED_MMR_1 <- Myanmar_final %>%
+  mutate(admin1 = case_when(
+    admin1 == "Bago-East" ~ "Bago (East)",
+    admin1 == "Bago-West" ~ "Bago (West)",
+    admin1 == "Shan-North" ~ "Shan (North)",
+    admin1 == "Shan-South" ~ "Shan (South)",
+    admin1 == "Shan-East" ~ "Shan (East)",
+    TRUE ~ as.character(admin1)
+  ))
+```
+
+```{r}
+ACLED_MMR_1 <- Myanmar_final %>%
+  mutate(admin2 = case_when(
+    admin2 == "Yangon-East" ~ "Yangon (East)",
+    admin2 == "Yangon-West" ~ "Yangon (West)",
+    admin2 == "Yangon-North" ~ "Yangon (North)",
+    admin2 == "Yangon-South" ~ "Yangon (South)",
+    admin2 == "Mong Pawk (Wa SAD)" ~ "Tachileik",
+    admin2 == "Nay Pyi Taw" ~ "Det Khi Na",
+    admin2 == "Yangon" ~ "Yangon (West)",
+    TRUE ~ as.character(admin2)
+  ))
 ```
 
 ## Exploratory Data Analysis
 
 ```{r}
-Incident_Summary <- Myanmar %>%
-  group_by(year,disorder_type,event_type) %>%
+Summary_Data <- ACLED_MMR_1 %>%
+  group_by(year,admin1, event_type) %>%
   summarize(
     Total_incidents = n(),
     Total_Fatalities = sum(fatalities, na.rm=TRUE)
@@ -135,7 +181,7 @@ Incident_Summary <- Myanmar %>%
 ::: callout-note
 #### Info on Code Chunk Above:
 
-The code above groups the *year, disorder type, and event type* together so that we can create a data table summarizing the total number of incidents for the year based on the disorder type and event type as well as a column totaling the amount of fatalities based on the same grouping selection
+The code above groups the *year, admin1, and event type* together so that we can create a data table summarizing the total number of incidents for the year based on the township(admin1) and event type as well as a column totaling the amount of fatalities based on the same grouping selection
 :::
 
 ### Summary of Incidents
@@ -145,7 +191,7 @@ The code above groups the *year, disorder type, and event type* together so that
 #| fig-height: 8
 
 
-ggplot(Incident_Summary, 
+ggplot(Summary_Data, 
        aes(x = year, 
            y = Total_incidents, 
            color = event_type)) +
@@ -177,7 +223,7 @@ Next, we will look at the total amount of fatalities by *event_type*.
 #| fig-height: 8
 
 
-ggplot(Incident_Summary, 
+ggplot(Summary_Data, 
        aes(x = year, y = Total_Fatalities, color = event_type)) +
   geom_point() +
   facet_wrap(~event_type) + 
@@ -191,53 +237,14 @@ ggplot(Incident_Summary,
   )
 ```
 
-To further understand the data above, we would now include the various regions (category "admin1" in the dataset"). However to visualize it clearer, more data wrangling would need to be done.
-
-### Additional Data Wrangling for Geo-Data
-
-```{r}
-ACLED_MMR_1 <- Myanmar %>%
-  mutate(admin1 = case_when(
-    admin1 == "Bago-East" ~ "Bago (East)",
-    admin1 == "Bago-West" ~ "Bago (West)",
-    admin1 == "Shan-North" ~ "Shan (North)",
-    admin1 == "Shan-South" ~ "Shan (South)",
-    admin1 == "Shan-East" ~ "Shan (East)",
-    TRUE ~ as.character(admin1)
-  ))
-```
-
-```{r}
-ACLED_MMR_1 <- Myanmar %>%
-  mutate(admin2 = case_when(
-    admin2 == "Yangon-East" ~ "Yangon (East)",
-    admin2 == "Yangon-West" ~ "Yangon (West)",
-    admin2 == "Yangon-North" ~ "Yangon (North)",
-    admin2 == "Yangon-South" ~ "Yangon (South)",
-    admin2 == "Mong Pawk (Wa SAD)" ~ "Tachileik",
-    admin2 == "Nay Pyi Taw" ~ "Det Khi Na",
-    admin2 == "Yangon" ~ "Yangon (West)",
-    TRUE ~ as.character(admin2)
-  ))
-```
-
-### Summary of Incidents against Fatalities by Region and Year
-
-```{r}
-Region_summary <- ACLED_MMR_1 %>%
-  group_by(year, admin1, event_type) %>%
-   summarize(
-    Total_incidents = n(),
-    Total_Fatalities = sum(fatalities, na.rm=TRUE)
-  )
-```
+### Incidents and Fatalities by Region and Year
 
 ```{r}
 #| fig-width: 14
 #| fig-height: 10
 
 
-gg1 <-  ggplot(Region_summary,
+gg1 <-  ggplot(Summary_Data,
               aes(x = admin1, y=Total_incidents,size = Total_Fatalities,  color = event_type)) +
   geom_point(aes(frame = year)) +
   theme_minimal() +
@@ -269,12 +276,12 @@ pacman::p_load(ggstatsplot, corrplot)
 
 ### Hypothesis 1
 
-Null Hypothesis: Is specific event types more correlated with number of fatalities?
+Null Hypothesis: Are there specific event types more correlated with number of fatalities?
 
 In order to test the above hypothesis, there would be some data wrangling that needs to be done first.
 
 ```{r}
-Incident_hypo1 <- Myanmar %>%
+Incident_hypo1 <- ACLED_MMR_1 %>%
   group_by(event_type,year) %>%
   summarize(
     Total_incidents = n(),
@@ -284,15 +291,14 @@ Incident_hypo1 <- Myanmar %>%
 
 ```{r}
 gg2 <- ggplot(Incident_hypo1,
-              aes(x = year, y = Total_incidents)) +
+              aes(x = year, y=Total_Fatalities)) +
   geom_boxplot() +
   stat_summary(geom = "point",       
                fun.y="mean",         
                colour ="red",        
                size=2)
 
-
-gg2
+ggplotly(gg2)
   
 
 ```
@@ -302,14 +308,84 @@ gg2
 #| fig-width: 10
 #| fig-height: 16
 
+ACLED_Filtered <- ACLED_MMR_1 %>%
+  filter(year == c(2020,2021,2022,2023))
 
- ggstatsplot::grouped_ggbetweenstats(Incident_hypo1, 
+
+
+ ggstatsplot::grouped_ggbetweenstats(ACLED_Filtered, 
               x = year, 
-              y = Total_incidents,
+              y = fatalities,
               grouping.var = event_type,
               type = "np",
               pairwise.display = "s",
               pairwise_comparisons = TRUE,
-              p.adjust.method = "fdr",
               output = "plot")
+```
+
+# Additional Plots
+
+```{r}
+set.seed(123)
+
+ggbetweenstats(ACLED_Filtered,
+               x = year,
+               y = fatalities)
+```
+
+```{r}
+ggbetweenstats(Incident_hypo1,
+               x= event_type,
+               y= Total_incidents)
+```
+
+#### Splitting up datasets via event_type to study by regions
+
+```{r}
+Battles_Summary <- ACLED_MMR_1 %>%
+  filter(event_type == "Battles")
+
+Explosion_Summary <- ACLED_MMR_1 %>%
+  filter(event_type == "Explosions/Remote violence")
+
+Protests_Summary <- ACLED_MMR_1 %>%
+  filter(event_type == "Protests")
+
+StratD_Summary <- ACLED_MMR_1 %>%
+  filter(event_type == "Strategic developments")
+
+VioCiv_Summary <- ACLED_MMR_1 %>%
+  filter(event_type == "Violence against civilians")
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 16
+
+
+set.seed(123)
+
+Battles_Summary_Grouped <- Battles_Summary %>%
+  group_by(admin1) %>%
+  summarize(
+    Total_Incidents = n(),
+    Total_Fatalities = sum(fatalities, na.rm=TRUE),
+    Mean_Fatalities = mean(fatalities)
+  )
+
+
+gg3 <- ggbarstats(ACLED_Filtered,
+           x = event_type,
+           y = admin1)
+
+ggplotly(gg3)
+
+```
+
+```{r}
+#Create subevent type correlation
+
+#subevent_correl <- ACLED_MMR_1 %>%
+  
+
 ```

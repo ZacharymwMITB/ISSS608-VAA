@@ -37,9 +37,7 @@ website:
                 - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_3.qmd
                 - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_4.qmd
                 - Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex5_5.qmd
-            - section: "Hands-on Exercise 6"
-              contents:
-                - Hands-on_Ex\Hands-on_Ex06\Hands-on_Ex6.qmd
+            - Hands-on_Ex\Hands-on_Ex06\Hands-on_Ex6.qmd
             - section: "Hands-on Exercise 7"
               contents:
                 - Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex7_01.qmd
@@ -59,6 +57,7 @@ website:
             - Take-Home_Ex\Take-Home_Ex02\Take-Home_Ex02.qmd
             - Take-Home_Ex\Take-Home_Ex03\Take-Home_Ex03.qmd
             - Take-Home_Ex\Take-Home_Ex04\Take-Home_Ex04.qmd
+            - Take-Home_Ex\Take-Home_Ex04\Take-Home_Ex04_1.qmd
         - text: "---"
       
   page-navigation: true

@@ -1278,13 +1278,13 @@
     "href": "Take-Home_Ex/Take-Home_Ex04/Take-Home_Ex04_1.html#mosaic-plot-incident-counts",
     "title": "Take Home Ex 4.1 - Project Charts",
     "section": "Mosaic Plot (Incident Counts)",
-    "text": "Mosaic Plot (Incident Counts)\n\nBy Year and Event Type\n\nvcd::mosaic(~year + event_type,  data = ACLED_MMR_1, gp = shading_max)\n\n\n\nBy Region and Event Type\n\nvcd::mosaic(~ admin1 + event_type,  data = ACLED_MMR_1, gp = shading_max)"
+    "text": "Mosaic Plot (Incident Counts)\n\nBy Year and Event Type\n\nvcd::mosaic(~year + event_type,  data = ACLED_MMR_1, gp = shading_max)\n\n\n\n\n\n\nBy Region and Event Type\n\nvcd::mosaic(~ admin1 + event_type,  data = ACLED_MMR_1, gp = shading_max)"
   },
   {
     "objectID": "Take-Home_Ex/Take-Home_Ex04/Take-Home_Ex04_1.html#using-geom_mosiac",
     "href": "Take-Home_Ex/Take-Home_Ex04/Take-Home_Ex04_1.html#using-geom_mosiac",
     "title": "Take Home Ex 4.1 - Project Charts",
     "section": "Using geom_mosiac",
-    "text": "Using geom_mosiac\n\nFatalities by Event Type and Region\n\ngg5 &lt;- ggplot(Region_Summary) +\n  geom_mosaic(aes(weight = Total_Fatalities,\n                  x = (product(event_type, country)), fill = admin1)) +\n  labs(x = \"Myanmar\",\n       fill = \"Regions\") +\n  ## guides(fill = \"none\") + to remove legend if not required\n  theme(\n    axis.text.x = element_blank(),\n    axis.title.y = element_blank() \n  ) \n\n\n\nggplotly(gg5)"
+    "text": "Using geom_mosiac\n\nFatalities by Event Type and Region\n\ngg5 &lt;- ggplot(Region_Summary) +\n  geom_mosaic(aes(weight = Total_Fatalities,\n                  x = (product(event_type, country)), fill = admin1)) +\n  labs(x = \"Myanmar\",\n       fill = \"Regions\") +\n  ## guides(fill = \"none\") + to remove legend if not required\n  theme(\n    axis.text.x = element_blank(),\n    axis.title.y = element_blank(),\n    axis.ticks.x = element_blank()\n  ) \n\n\n\nggplotly(gg5)"
   }
 ]

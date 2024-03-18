@@ -303,7 +303,6 @@ ggbetweenstats(Summary_Data,
 ### By Year and Event Type
 
 ```{r}
-#| eval: false
 #| fig-width: 12
 #| fig-height: 12
 

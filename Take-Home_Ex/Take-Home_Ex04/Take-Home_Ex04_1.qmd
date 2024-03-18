@@ -1,0 +1,346 @@
+---
+title: "Take Home Ex 4.1 - Project Charts"
+author: "Zachary Wong"
+date: 03.18.2024
+date-modified: "last-modified"
+toc: true
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+code-overflow: wrap
+website:
+  back-to-top-navigation: true
+---
+
+# Installing and Launching R Packages
+
+```{r}
+pacman::p_load(shiny, tidyverse, shinydashboard,dplyr,
+               spatstat, spdep,
+               lubridate, leaflet,
+               plotly, DT, viridis,
+               ggplot2, sf, tmap, readr,
+               scales, ggthemes, gridExtra,
+               knitr, data.table,
+               CGPfunctions, ggHoriPlot, 
+               patchwork, ggiraph, vcd, vcdExtra,
+               ggstatsplot, ggmosaic)
+```
+
+# Data Wrangling
+
+## Importing Dataset
+
+```{r}
+Myanmar <- read_csv("data/2010-01-01-2023-12-31-Southeast_Asia-Myanmar.csv")
+```
+
+## Adjusting Attributes
+
+```{r}
+Myanmar <- Myanmar %>%
+  mutate(year =factor(year))
+
+Myanmar$event_date <- dmy(Myanmar$event_date)
+
+```
+
+## Reducing Columns
+
+```{r}
+Myanmar_final <- Myanmar %>%
+  select(-time_precision, -geo_precision, -source_scale, -timestamp, -tags)
+```
+
+## Geo-data Correction
+
+```{r}
+ACLED_MMR_1 <- Myanmar_final %>%
+  mutate(admin1 = case_when(
+    admin1 == "Bago-East" ~ "Bago (East)",
+    admin1 == "Bago-West" ~ "Bago (West)",
+    admin1 == "Shan-North" ~ "Shan (North)",
+    admin1 == "Shan-South" ~ "Shan (South)",
+    admin1 == "Shan-East" ~ "Shan (East)",
+    TRUE ~ as.character(admin1)
+  ))
+```
+
+```{r}
+ACLED_MMR_1 <- Myanmar_final %>%
+  mutate(admin2 = case_when(
+    admin2 == "Yangon-East" ~ "Yangon (East)",
+    admin2 == "Yangon-West" ~ "Yangon (West)",
+    admin2 == "Yangon-North" ~ "Yangon (North)",
+    admin2 == "Yangon-South" ~ "Yangon (South)",
+    admin2 == "Mong Pawk (Wa SAD)" ~ "Tachileik",
+    admin2 == "Nay Pyi Taw" ~ "Det Khi Na",
+    admin2 == "Yangon" ~ "Yangon (West)",
+    TRUE ~ as.character(admin2)
+  ))
+```
+
+# EDA
+
+## Summary of Incidents
+
+```{r}
+Summary_Data <- ACLED_MMR_1 %>%
+  group_by(year,event_type) %>%
+  summarize(
+    Total_incidents = n(),
+    Total_Fatalities = sum(fatalities, na.rm=TRUE)
+  )
+```
+
+### Distribution of Incidents Across Years by *event_type*
+
+```{r}
+#| fig-width: 14
+#| fig-height: 20
+
+gg1 <- ggplot(Summary_Data,
+       aes(x = year,
+           y = Total_incidents,
+           fill = event_type)) +
+  geom_col_interactive(aes(tooltip = year,
+                           data_id = year),
+                       alpha = 0.5) +
+  geom_text(aes(label = Total_incidents), 
+            vjust = 0.5, 
+            color = "black",
+            size = 2,
+            check_overlap = TRUE,
+            position = "dodge") +
+  facet_wrap(~event_type, 
+             ncol =2) +
+  theme_minimal() +
+  labs(y = "Total Number of Incidents", x = "Years") +
+  theme(
+    panel.grid.major.y = element_line(color = "pink", linetype = 2),
+    strip.background = element_rect(fill = "black"),
+    axis.text.x = element_blank(),
+    strip.text = element_text(colour = "white"),
+    legend.position = "none")
+
+girafe(                                  
+  ggobj = gg1,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618)
+  
+```
+
+### Distribution of Fatalities Across Years by *event_type*
+
+```{r}
+#| fig-width: 14
+#| fig-height: 20
+
+gg2 <- ggplot(Summary_Data,
+       aes(x = year,
+           y = Total_Fatalities,
+           fill = event_type)) +
+  geom_col_interactive(aes(tooltip = year,
+                           data_id = year),
+                       alpha = 0.5) +
+  geom_text(aes(label = Total_incidents), 
+            vjust = 0.5, 
+            color = "black",
+            size = 2,
+            check_overlap = TRUE,
+            position = "dodge") +
+  facet_wrap(~event_type,
+             ncol =2) +
+  theme_minimal() +
+  labs(y = "Total Number of Fatalities", x = "Years") +
+  theme(
+    panel.grid.major.y = element_line(color = "pink", linetype = 2),
+    strip.background = element_rect(fill = "black"),
+    strip.text = element_text(colour = "white"),
+    axis.text.x = element_blank(),
+    legend.position = "none")
+
+girafe(                                  
+  ggobj = gg2,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618)
+
+```
+
+### Distribution of Incidents by Region
+
+```{r}
+Region_Summary <- ACLED_MMR_1 %>%
+  group_by(country, admin1,event_type, disorder_type) %>%
+  summarize(
+    Total_incidents = n(),
+    Total_Fatalities = sum(fatalities, na.rm=TRUE)
+  )
+```
+
+```{r}
+#| fig-width: 14
+#| fig-height: 20
+
+
+gg3 <- ggplot(Region_Summary,
+       aes(x = admin1,
+           y = Total_incidents,
+           fill = event_type)) +
+  geom_col_interactive(aes(tooltip = admin1,
+                           data_id = admin1),
+                       alpha = 0.5) +
+  geom_text(aes(label = Total_incidents), 
+            vjust = 0.5, 
+            color = "black",
+            size = 2,
+            check_overlap = TRUE,
+            position = "dodge") +
+  facet_wrap(~event_type,
+             ncol =2) +
+  theme_minimal() +
+  labs(y = "Total Number of Incidents", x = "Regions") +
+  theme(
+    panel.grid.major.y = element_line(color = "pink", linetype = 2),
+    axis.text.x = element_blank(),
+    strip.background = element_rect(fill = "black"),
+    strip.text = element_text(colour = "white"),
+    legend.position = "none")
+
+girafe(                                  
+  ggobj = gg3,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618)
+
+```
+
+### Distribution of Fatalities by Region
+
+```{r}
+#| fig-width: 14
+#| fig-height: 20
+
+
+gg4 <- ggplot(Region_Summary,
+       aes(x = admin1,
+           y = Total_Fatalities,
+           fill = event_type)) +
+  geom_col_interactive(aes(tooltip = admin1,
+                           data_id = admin1),
+                       alpha = 0.5) +
+  geom_text(aes(label = Total_Fatalities), 
+            vjust = 0.5, 
+            color = "black",
+            size = 2,
+            check_overlap = TRUE,
+            position = "dodge") +
+  facet_wrap(~event_type,
+             ncol =2) +
+  theme_minimal() +
+  labs(y = "Total Number of Fatalities", x = "Regions") +
+  theme(
+    panel.grid.major.y = element_line(color = "pink", linetype = 2),
+    axis.text.x = element_blank(),
+    strip.background = element_rect(fill = "black"),
+    strip.text = element_text(colour = "white"),
+    legend.position = "none")
+
+girafe(                                  
+  ggobj = gg4,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618)
+```
+
+# CDA
+
+## Summary of Event Types by Fatalities (Total Count)
+
+```{r}
+ggbetweenstats(ACLED_MMR_1,
+               x= event_type,
+               y= fatalities)
+```
+
+## Summary of Event Types by Fatalities (Total Count), Grouped by Region
+
+```{r}
+#| fig-width: 14
+#| fig-height: 25
+
+
+grouped_ggbetweenstats(ACLED_MMR_1, 
+              x = event_type, 
+              y = fatalities,
+              grouping.var = admin1,
+              type = "np",
+              pairwise.display = "s",
+              pairwise_comparisons = TRUE,
+              output = "plot")
+```
+
+## Summary of Event Types Across Years, Incidents and Fatalities
+
+### Incidents
+
+```{r}
+ggbetweenstats(Summary_Data,
+               x= event_type,
+               y= Total_incidents)
+```
+
+### Fatalities
+
+```{r}
+ggbetweenstats(Summary_Data,
+               x= event_type,
+               y= Total_Fatalities)
+```
+
+## Mosaic Plot (Incident Counts)
+
+### By Year and Event Type
+
+```{r}
+#| eval: false
+#| fig-width: 12
+#| fig-height: 12
+
+
+vcd::mosaic(~year + event_type,  data = ACLED_MMR_1, gp = shading_max)
+```
+
+### By Region and Event Type
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+
+vcd::mosaic(~ admin1 + event_type,  data = ACLED_MMR_1, gp = shading_max)
+```
+
+## Using geom_mosiac
+
+### Fatalities by Event Type and Region
+
+```{r}
+#| fig-width: 16
+#| fig-height: 12
+gg5 <- ggplot(Region_Summary) +
+  geom_mosaic(aes(weight = Total_Fatalities,
+                  x = (product(event_type, country)), fill = admin1)) +
+  labs(x = "Myanmar",
+       fill = "Regions") +
+  ## guides(fill = "none") + to remove legend if not required
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.x = element_blank()
+  ) 
+
+
+
+ggplotly(gg5)
+```

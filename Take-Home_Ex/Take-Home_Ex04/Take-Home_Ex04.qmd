@@ -339,6 +339,12 @@ ggbetweenstats(Incident_hypo1,
                y= Total_incidents)
 ```
 
+```{r}
+ggbetweenstats(ACLED_Filtered,
+               x= event_type,
+               y= fatalities)
+```
+
 #### Splitting up datasets via event_type to study by regions
 
 ```{r}
@@ -382,10 +388,5 @@ ggplotly(gg3)
 
 ```
 
-```{r}
-#Create subevent type correlation
-
-#subevent_correl <- ACLED_MMR_1 %>%
-  
-
+```{}
 ```

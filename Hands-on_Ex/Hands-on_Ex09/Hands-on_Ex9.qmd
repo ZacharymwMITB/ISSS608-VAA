@@ -1,0 +1,13 @@
+---
+title: "Hands On Exercise 9"
+author: "Zachary Wong"
+date: 03.21.2024
+date-modified: "last-modified"
+toc: true
+execute: 
+  eval: true
+  echo: true
+  warning: false
+editor: visual
+code-overflow: wrap
+---

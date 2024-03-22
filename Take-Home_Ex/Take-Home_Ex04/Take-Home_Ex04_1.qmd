@@ -26,7 +26,8 @@ pacman::p_load(shiny, tidyverse, shinydashboard,dplyr,
                knitr, data.table,
                CGPfunctions, ggHoriPlot, 
                patchwork, ggiraph, vcd, vcdExtra,
-               ggstatsplot, ggmosaic)
+               ggstatsplot, ggmosaic, FunnelPlotR,
+               knitr)
 ```
 
 # Data Wrangling
@@ -173,7 +174,7 @@ girafe(
 
 ```{r}
 Region_Summary <- ACLED_MMR_1 %>%
-  group_by(country, admin1,event_type, disorder_type) %>%
+  group_by(country, admin1, admin2, admin3, event_type, disorder_type) %>%
   summarize(
     Total_incidents = n(),
     Total_Fatalities = sum(fatalities, na.rm=TRUE)
@@ -342,4 +343,83 @@ gg5 <- ggplot(Region_Summary) +
 
 
 ggplotly(gg5)
+```
+
+# FunnelPlotR
+
+```{r}
+Region_Summary_Test <- ACLED_MMR_1 %>%
+  filter(year == 2023)
+
+Region_Summary_Test <- Region_Summary_Test %>%
+  group_by(country, admin1, admin2, admin3, event_type) %>%
+  summarize(
+    Total_incidents = n(),
+    Total_fatalities = sum(fatalities)
+  )
+
+Region_Summary_Test <- Region_Summary_Test %>%
+  mutate(rate = Total_fatalities / Total_incidents) %>%
+  mutate(rate.se = sqrt((rate*(1-rate))/ (Total_incidents))) %>%
+  filter(rate>0)
+```
+
+```{r}
+fit.mean <- weighted.mean(Region_Summary_Test$rate, 1/Region_Summary_Test$rate.se^2)
+```
+
+```{r}
+number.seq <- seq(1, max(Region_Summary_Test$Total_incidents), 1)
+number.ll95 <- fit.mean - 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) 
+number.ul95 <- fit.mean + 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) 
+number.ll999 <- fit.mean - 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) 
+number.ul999 <- fit.mean + 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) 
+dfCI <- data.frame(number.ll95, number.ul95, number.ll999, 
+                   number.ul999, number.seq, fit.mean)
+```
+
+```{r}
+p <- ggplot(Region_Summary_Test, aes(x = Total_incidents, y = rate)) +
+  geom_point(alpha=0.4) +
+  geom_line(data = dfCI, 
+            aes(x = number.seq, 
+                y = number.ll95), 
+            size = 0.4, 
+            colour = "grey40", 
+            linetype = "dashed") +
+  geom_line(data = dfCI, 
+            aes(x = number.seq, 
+                y = number.ul95), 
+            size = 0.4, 
+            colour = "grey40", 
+            linetype = "dashed") +
+  geom_line(data = dfCI, 
+            aes(x = number.seq, 
+                y = number.ll999), 
+            size = 0.4, 
+            colour = "grey40") +
+  geom_line(data = dfCI, 
+            aes(x = number.seq, 
+                y = number.ul999), 
+            size = 0.4, 
+            colour = "grey40") +
+  geom_hline(data = dfCI, 
+             aes(yintercept = fit.mean), 
+             size = 0.4, 
+             colour = "grey40")
+
+p
+```
+
+```{r}
+funnel_plot(
+  numerator = Region_Summary_Test$Total_incidents,
+  denominator = Region_Summary_Test$Total_fatalities,
+  group = Region_Summary_Test$admin2,
+  data_type = "PR", #<<
+  xrange = c(0,1500), #<<
+  yrange = c(0,20) #<<
+
+
+)
 ```

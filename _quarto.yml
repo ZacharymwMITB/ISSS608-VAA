@@ -44,6 +44,7 @@ website:
                 - Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex7_02.qmd
                 - Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex7_03.qmd
             - Hands-on_Ex\Hands-on_Ex08\Hands-on_Ex8.qmd
+            - Hands-on_Ex\Hands-on_Ex09\Hands-on_Ex9.qmd
             
         - text: "---"
         - section: "In Class Exercises"

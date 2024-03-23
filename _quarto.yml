@@ -7,6 +7,7 @@ website:
   navbar: 
     background: none
     search: true
+  back-to-top-navigation: true
   
     
   sidebar:

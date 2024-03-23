@@ -18,10 +18,10 @@ Myanmar <- read_csv("data/ACLED_MMR_1.csv")
 ui <- fluidPage(
     titlePanel("Mosaic Plots"),
     sidebarLayout(
-      varSelectInput("VarSelect1",
+      varSelectInput(inputId = "VarSelect1",
                      "Select Variable 1: ",
                      data = Myanmar),
-      varSelectInput("varselect2",
+      varSelectInput(inputId ="varselect2",
                      "Select Variable 2: ",
                      data = Myanmar)),
       mainPanel(
@@ -30,7 +30,7 @@ ui <- fluidPage(
 )
 
 
-server <- function(input, output) {  
+server <- function(input, output) { 
   output$Mosaic <-renderPlot({
     vcd::mosaic(~input$VarSelect1 + input$varselect2, data = Myanmar)
   })

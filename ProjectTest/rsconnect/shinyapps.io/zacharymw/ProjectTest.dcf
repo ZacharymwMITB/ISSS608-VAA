@@ -1,0 +1,12 @@
+name: ProjectTest
+title: ProjectTest
+username: zacharymw
+account: zacharymw
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11570037
+bundleId: 8408392
+url: https://zacharymw.shinyapps.io/ProjectTest/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

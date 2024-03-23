@@ -4,6 +4,8 @@ author: "Zachary Wong"
 date: 03.21.2024
 date-modified: "last-modified"
 toc: true
+toc-location: body
+toc-expand: true
 execute: 
   eval: true
   echo: true

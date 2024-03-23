@@ -174,7 +174,7 @@ girafe(
 
 ```{r}
 Region_Summary <- ACLED_MMR_1 %>%
-  group_by(country, admin1, admin2, admin3, event_type, disorder_type) %>%
+  group_by(country, admin1, admin2, admin3, event_type,sub_event_type, disorder_type) %>%
   summarize(
     Total_incidents = n(),
     Total_Fatalities = sum(fatalities, na.rm=TRUE)
@@ -308,7 +308,12 @@ ggbetweenstats(Summary_Data,
 #| fig-height: 12
 
 
-vcd::mosaic(~year + event_type,  data = ACLED_MMR_1, gp = shading_max)
+vcd::mosaic(~year + event_type,  data = ACLED_MMR_1, gp = shading_max,
+            labeling = labeling_border(rot_labels = c(90,0,0,0), 
+                                 just_labels = c("left", 
+                                                 "center", 
+                                                 "center", 
+                                                 "right")))
 ```
 
 ### By Region and Event Type
@@ -318,7 +323,13 @@ vcd::mosaic(~year + event_type,  data = ACLED_MMR_1, gp = shading_max)
 #| fig-height: 12
 
 
-vcd::mosaic(~ admin1 + event_type,  data = ACLED_MMR_1, gp = shading_max)
+vcd::mosaic(~ admin1 + event_type,  data = ACLED_MMR_1, gp = shading_max, 
+            labeling = labeling_border(rot_labels = c(90,0,0,0),
+                                       just_labels = c("left", 
+                                                 "center", 
+                                                 "center", 
+                                                 "right")
+                                 ))
 ```
 
 ## Using geom_mosiac
@@ -343,6 +354,26 @@ gg5 <- ggplot(Region_Summary) +
 
 
 ggplotly(gg5)
+```
+
+```{r}
+#| fig-width: 16
+#| fig-height: 20
+gg6 <- ggplot(Region_Summary) +
+  geom_mosaic(aes(weight = Total_Fatalities,
+                  x = (product(sub_event_type, country)), fill = admin2)) +
+  labs(x = "Myanmar",
+       fill = "Territory") +
+  ## guides(fill = "none") + to remove legend if not required
+  theme(
+    axis.text.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.x = element_blank()
+  ) 
+
+
+
+ggplotly(gg6)
 ```
 
 # FunnelPlotR

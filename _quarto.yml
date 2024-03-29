@@ -61,6 +61,9 @@ website:
             - Take-Home_Ex\Take-Home_Ex04\Take-Home_Ex04.qmd
             - Take-Home_Ex\Take-Home_Ex04\Take-Home_Ex04_1.qmd
         - text: "---"
+        - section: "Project"
+          contents: 
+            - ProjectTest\ProjectCDA.qmd
       
   page-navigation: true
 format:

@@ -852,11 +852,11 @@ Confirm3 <- fluidRow(
                          selected = 2023),
              selectizeInput(inputId = "Option1",
                          label = "Region: ",
-                         choices = unique(ACLED_MMR_Mosaic$admin1),
+                         choices = sort(unique(ACLED_MMR_Mosaic$admin1)),
                          multiple = TRUE),
              selectizeInput(inputId = "Option2",
                          label = "Event Type: ",
-                         choices = unique(ACLED_MMR_Mosaic$event_type),
+                         choices = sort(unique(ACLED_MMR_Mosaic$event_type)),
                          multiple = TRUE
                          ),
              selectInput(inputId = "Option3",
@@ -1889,7 +1889,7 @@ server <- function(input, output, session) {
     
     if(is.null(dataForMosaic2)) return()  # Check if the data is NULL and exit if it is
     
-    Mosaic2 <- vcd::mosaic(~ admin1 + event_type, data = dataForMosaic2, gp = shading_max, 
+    Mosaic2 <- vcd::mosaic(~ admin1 + event_type + Has_Fatalities, data = dataForMosaic2, gp = shading_Friendly, 
                            labeling = labeling_border(labels = TRUE, varnames = FALSE, 
                                                       rot_labels = c(90, 0, 0, 0), 
                                                       just_labels = c("left", "center", "center", "right")))

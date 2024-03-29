@@ -10,8 +10,6 @@ execute:
   warning: false
 editor: visual
 code-overflow: wrap
-website:
-  back-to-top-navigation: true
 ---
 
 # Installing and Launching R Packages
@@ -330,6 +328,37 @@ vcd::mosaic(~ admin1 + event_type,  data = ACLED_MMR_1, gp = shading_max,
                                                  "center", 
                                                  "right")
                                  ))
+```
+
+### admin1 + disorder_type
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+
+vcd::mosaic(~ admin1 + disorder_type, zero_size = FALSE,  data = ACLED_MMR_1,gp = shading_max, 
+            labeling = labeling_border(rot_labels = c(90,0,0,0),
+                                       just_labels = c("left", 
+                                                 "center", 
+                                                 "center", 
+                                                 "right")))
+                                 
+```
+
+### subeventtype
+
+```{r}
+#| fig-width: 12
+#| fig-height: 12
+
+
+vcd::mosaic(~ sub_event_type +admin1, zero_size = FALSE,  data = ACLED_MMR_1,gp = shading_max, 
+            labeling = labeling_border(rot_labels = c(90,0,0,0),
+                                       just_labels = c("left", 
+                                                 "center", 
+                                                 "center", 
+                                                 "right")))
 ```
 
 ## Using geom_mosiac

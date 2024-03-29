@@ -1,9 +1,11 @@
+
 # load R packages
 pacman::p_load(shiny, shinydashboard, shinycssloaders, 
-               tidyverse, dplyr, leaflet, plotly, highcharter, 
-               ggthemes, fresh, sf, sfdep, tmap, tm, ggforce, 
-               ggraph, igraph, wordcloud, tidytext, DT, spatstat,
-               lubridate,viridis, ggplot2, readr, purrr, ggstatsplot, vcd, ggmosaic)
+               tidyverse, dplyr, leaflet, plotly, 
+               ggthemes, fresh, sf, sfdep, tmap, tm, 
+               ggraph, igraph, tidytext, DT, spatstat,
+               lubridate,viridis, ggplot2, readr, purrr, ggstatsplot, 
+               vcd, ggmosaic, forcats)
 
 
 ACLED_MMR <- read_csv("data/MMR.csv")
@@ -72,8 +74,8 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     width = 100,
     menuItem("Aspatial Analysis", tabName = "Exploratory", icon = icon("globe")),
-    menuItem("Clustering & Outlier Analysis", tabName = "Cluster", icon = icon("circle-nodes")),
-    menuItem("Emerging Hot Spot Analysis", tabName = "EHSA", icon = icon("magnifying-glass-chart")),
+    menuItem("Geospatial Analysis", tabName = "Cluster", icon = icon("circle-nodes")),
+    #menuItem("Emerging Hot Spot Analysis", tabName = "EHSA", icon = icon("magnifying-glass-chart")),
     menuItem("Confirmatory Analysis", tabName = "ConfirmatoryAnalysis", icon = icon("clipboard-check")),
     menuItem("Visit ACLED data", icon = icon("send",lib='glyphicon'), 
              href = "https://acleddata.com/data-export-tool/")))
@@ -244,264 +246,6 @@ ExploreGeospatialrow1 <-  fluidRow(
 )
 
 
-#==========================================================  
-# ExploreTrendrow1 ---
-#==========================================================  
-ExploreTrendrow1 <-  fluidRow(
-  box(
-    title = "Rising Armed Conflict Incidents in Myanmar (2010 to 2023)",
-    status = "danger",
-    solidHeader = TRUE, 
-    collapsible = TRUE,
-    width = 12,  # Use full width
-    column(8,
-           box(
-             width = NULL,
-             withSpinner(highchartOutput("line_et1", height = "400px"))  # Width is automatically 100% of the box
-           )
-    ),
-    column(
-      4,
-      
-      box(title = "Desired Characteristics",
-          status = "info",
-          solidHeader = FALSE, 
-          width = NULL, 
-          helpText("Filter options are applicable to line chart"),
-          selectizeInput(inputId = "EventSelect_et1",
-                         label = "Select Event(s)",
-                         choices = unique(final$event_type),
-                         multiple = TRUE,
-                         options = list(maxItems = 6, placeholder = 'Enter event type',
-                                        onInitialize = I('function() { this.setValue(""); }'))
-          ),
-          hr(),
-          selectizeInput(inputId = "AdminSelect_et1",
-                         label = "Select Administrative Region(s)",
-                         choices = unique(final$admin1),
-                         multiple = TRUE,
-                         options = list(maxItems = 18, placeholder = 'Enter Admin Region',
-                                        onInitialize = I('function() { this.setValue(""); }'))
-          ),
-          hr(),
-          sliderInput(inputId = "YearSlider_et1", 
-                      label = "Years:", 
-                      min = 2010, 
-                      max = 2023,
-                      value = c(2010, 2023))
-      )
-    )
-  )
-)
-
-#==========================================================  
-# ExploreTrendrow2 ---
-#==========================================================  
-ExploreTrendrow2 <-  fluidRow(
-  box(
-    title = "Annual Calendar",
-    status = "danger",
-    solidHeader = TRUE, 
-    collapsible = TRUE,
-    width = 12,  # Use full width
-    column(8,
-           box(
-             width = 12,  # Use full width
-             withSpinner(plotlyOutput("calendar_et1", height = "400px"))
-           )
-    ),
-    column(
-      4,
-      
-      box(title = "Desired Characteristics",
-          status = "info",
-          solidHeader = FALSE, 
-          width = 12,  # Use full width
-          helpText("Filter options are applicable to calendar"),
-          selectInput(inputId = "YearSelect_et2", 
-                      label = "Year:", 
-                      choices = unique(final$year), 
-                      # selected = 2023,
-          ),
-          hr(),
-          radioButtons(inputId = "InciFata_et2",
-                       label = "Display",
-                       choices = c("No. of Incidents" = "Total_Incidents", "No. of Fatalities" = "Total_Fatalities"),
-                       selected = "No. of Fatalities")
-      )
-    )
-  )
-)
-
-
-#==========================================================  
-# ExploreDistributionrow1 ---
-#==========================================================  
-ExploreDistributionrow1 <-  fluidRow(
-  column(4
-  ),
-  column(6,
-         sliderInput(inputId = "YearSlider_ed1", 
-                     label = "Years:", 
-                     min = 2010, 
-                     max = 2023,
-                     value = c(2010, 2023))
-  ),
-  column(4
-  )
-)
-
-#==========================================================  
-# ExploreDistributionrow2 ---
-#========================================================== 
-ExploreDistributionrow2 <- fluidRow(
-  column(6,
-         box(
-           title = "Distribution of armed conflicts in Myanmar based on Sub-national Administrative Region 1",
-           status = "danger",
-           solidHeader = TRUE, 
-           width = 12,
-           height = 700,
-           withSpinner(plotlyOutput("box_ed1", height = "600px"))  
-         )),
-  column(6,
-         box(
-           title = "Distribution of armed conflicts in Myanmar based on Events",
-           status = "danger",
-           solidHeader = TRUE, 
-           width = 12,
-           height = 700,
-           withSpinner(plotlyOutput("box_ed2", height = "600px"))  # Width is automatically 100% of the box
-         ))
-)
-
-#==========================================================  
-# ExploreDistributionrow3 ---
-#========================================================== 
-ExploreDistributionrow3 <- fluidRow(
-  column(12,
-         box(title = "Chart Interpretation",
-             status = "danger",
-             solidHeader = TRUE,
-             collapsible = TRUE,
-             width = NULL,
-             align = "justify",
-             textOutput("distributiontext") 
-         ))
-)
-
-#==========================================================  
-# ExploreNetworkrow1 ---
-#==========================================================  
-ExploreNetworkrow1 <-  fluidRow(
-  box(
-    title = "Network Relationship Among Actors in Myanmar",
-    status = "danger",
-    solidHeader = TRUE, 
-    width = 12,  # Use full width
-    column(9,
-           box(width = NULL,
-               align = "center",
-               withSpinner(plotOutput("network_en1", height = "600px", width = "100%"))  # Set map width to 100% of box
-           )
-    ),
-    column(3,
-           box(title = "Desired Characteristics",
-               status = "info",
-               solidHeader = FALSE, 
-               width = NULL, 
-               selectizeInput(inputId = "EventSelect_en1",
-                              label = "Select Event(s)",
-                              choices = unique(final$event_type),
-                              multiple = TRUE,
-                              options = list(maxItems = 6, placeholder = 'Enter event type',
-                                             onInitialize = I('function() { this.setValue(""); }'))
-               ),
-               hr(),
-               selectizeInput(inputId = "AdminSelect_en1",
-                              label = "Select Administrative Region(s)",
-                              choices = unique(final$admin1),
-                              multiple = TRUE,
-                              options = list(maxItems = 18, placeholder = 'Enter Admin Region',
-                                             onInitialize = I('function() { this.setValue(""); }'))
-               ),
-               hr(),
-               selectInput(inputId = "YearSelect_en1", 
-                           label = "Year:", 
-                           choices = unique(final$year), 
-                           # selected = 2023,
-               ),
-           ),
-           box(title = "Chart Interpretation",
-               status = "danger",
-               solidHeader = TRUE,
-               collapsible = TRUE,
-               width = NULL,  # Automatically adjust to full width
-               align = "justify",
-               textOutput("networktext") 
-           )
-    )
-  ) 
-)
-
-
-
-#==========================================================  
-# ExploreSummaryrow1 ---
-#========================================================== 
-ExploreSummaryrow1 <-  fluidRow(
-  column(4,
-         box(
-           title = "Word Cloud - Incident Summary",
-           status = "danger",
-           solidHeader = TRUE, 
-           collapsible = TRUE,
-           width = NULL,
-           height = 800,
-           box(title = "Desired Characteristics",
-               status = "info",
-               solidHeader = FALSE, 
-               width = NULL,
-               helpText("Filter options are applicable to word cloud"),
-               selectizeInput(inputId = "EventSelect_es1",
-                              label = "Select Event(s)",
-                              choices = unique(final$event_type),
-                              multiple = TRUE,
-                              options = list(maxItems = 6, placeholder = 'Enter event type',
-                                             onInitialize = I('function() { this.setValue(""); }'))
-               ),
-               hr(),
-               selectizeInput(inputId = "AdminSelect_es1",
-                              label = "Select Region(s)",
-                              choices = unique(final$admin1),
-                              multiple = TRUE,
-                              options = list(maxItems = 18, placeholder = 'Enter Admin Region',
-                                             onInitialize = I('function() { this.setValue(""); }'))
-               ),
-               hr(),
-               selectInput(inputId = "YearSelect_es1", 
-                           label = "Year:", 
-                           choices = unique(final$year), 
-                           # selected = 2023,
-               )),
-           withSpinner(plotOutput("cloud_es1", height = "300px", width = "100%"))  # Set map width to 100% of box
-           
-         )),
-  
-  column(8,
-         box(
-           title = "Data Table",
-           status = "danger",
-           width = NULL,
-           solidHeader = TRUE, 
-           collapsible = TRUE,
-           withSpinner(DT::dataTableOutput(outputId = "ExploreSummaryTable")),
-           style = "height:750px; overflow-y: scroll;overflow-x: scroll;" # Set scrollbars
-         )
-         
-  )
-  
-)
 
 #==========================================================  
 # ExploreSubTabs
@@ -512,134 +256,34 @@ ExploreSubTabs <- tabsetPanel(
   ),
   tabPanel("Geospatial Exploration", 
            ExploreGeospatialrow1
-  ),
-  tabPanel("Trends", 
-           ExploreTrendrow1,
-           ExploreTrendrow2
-  ),  
-  tabPanel("Distributions", 
-           ExploreDistributionrow1,
-           ExploreDistributionrow2,
-           ExploreDistributionrow3
-  ),
-  tabPanel("Network Relationships", 
-           ExploreNetworkrow1
-  ),
-  tabPanel("Incident Summary", 
-           ExploreSummaryrow1
   )
-)
+  #tabPanel("Trends", 
+  #ExploreTrendrow1,
+  #ExploreTrendrow2
+)  
+
+
+
+
+
 
 # =============================    
 ########### EXPLORATORY - END
 # =============================
 
-#==========================================================  
-# Cluster and Outlier - START
-#==========================================================  
+
+# =============================    
+########### GEOSPATIAL ANALYSIS - START
+# =============================
 
 
 #==========================================================  
-##Cluster and Outlier Analysis, 1st Tab KIV
+##Geospatial Analysis, 1st Tab
 #==========================================================  
 
-#Cluster1 <- fluidRow(
-#column(2,
-#box(title = "Desired Characteristic",
-#status = "info",
-#solidHeader = FALSE,
-#width = NULL,
-#helpText("Filter options for Proportional Symbol Map",
-#selectInput(inputId = "Yearpointmap",
-#           label = "Year:",
-#          choices = seq(2010,2023),
-#         selected = 2021),
-#selectInput("eventType1", "Event Type:",
-#           choices = c("Battles" = "Battles",
-#                      "Violence against civilians" = "Violence against civilians",
-#                     "Protests" = "Protests",
-#                    "Riots" = "Riots",
-#                   "Explosions/Remote violence" = "Explosions/Remote violence",
-#                  "Strategic developments" = "Strategic developments"),
-#     selected = "Battles"),
-#),
-#box(title = "Chart Interpretation",
-#   status = "danger",
-#  solidHeader = TRUE,
-# collapsible = TRUE,
-# width = NULL,
-# align = "left",
-# textOutput("PointMaptext"))
-
-# )
-
-#),
-#column(4,
-# box(title = "Location of Conflict Events",
-#    status = "danger",
-#   solidHeader = TRUE,
-#  collapsible = TRUE,
-# width = NULL,
-#align = "center",
-#leafletOutput("Pointmap", height = "700px", width = "100%"))
-#),
-#column(10,
-#box(
-# title = "Distribution of Conflict Events",
-# status = "danger",
-# solidHeader = TRUE,
-# collapsible = TRUE,
-# width = NULL,
-# align = "left",
-# tmapOutput("choropleth", height = "700px", width = "100%"))
-
-#),   
-#column(2,
-#     box(title = "Desired Characteristic",
-#        status = "info",
-#       solidHeader = FALSE,
-#      width = NULL,
-#     helpText("Filter options for Choropleth Map",
-#             selectInput(inputId = "Yearchoromap",
-#                        label = "Year:",
-#                       choices = seq(2010,2023),
-#                      selected = 2021),
-#         selectInput("eventType2", "Event Type:",
-#                    choices = c("Battles" = "Battles",
-#                               "Violence against civilians" = "Violence against civilians",
-#                              "Protests" = "Protests",
-#                             "Riots" = "Riots",
-#                            "Explosions/Remote violence" = "Explosions/Remote violence",
-#                           "Strategic developments" = "Strategic developments"),
-#              selected = "Battles"),   
-# radioButtons("metricType", "Count Type:",
-#             choices = c("Incidents" = "Incidents",
-#                        "Fatalities" = "Fatalities"),
-#           selected = "Fatalities",
-#          inline = TRUE),
-#radioButtons("mapStyle", "Classification Type:",
-#            choices = c("quantile", "equal", "jenks", "kmeans", "pretty"),
-#           selected = "quantile",
-#          inline = TRUE)),
-#box(title = "Chart Interpretation",
-#   status = "danger",
-#  solidHeader = TRUE,
-#   collapsible = TRUE,
-#   width = NULL,
-#   align = "left",
-#   textOutput("ChoroMaptext"))
-
-#  )
-
-#  )
-
-#)
-
 #==========================================================  
-##Cluster and Outlier Analysis, 2nd Tab
-#==========================================================  
-
-
+##LISA
+#========================================================== 
 
 Cluster2 <- fluidRow(
   column(2,
@@ -670,7 +314,7 @@ Cluster2 <- fluidRow(
                                      "Riots" = "Riots"),
                          selected = "Battles")
          ),
-         box(title = "Options for computing Local Moran's I",
+         box(title = "Options for Local Moran's I",
              status = "info",
              solidHeader = FALSE,
              width = NULL,
@@ -684,27 +328,39 @@ Cluster2 <- fluidRow(
                          selected = "W"),
              selectInput("numSims1", "Number of Simulations:",
                          choices = c(99, 199, 299, 399, 499),
-                         selected = 99)
+                         selected = 99),
+             selectInput("localmoranstats", "Show Local Moran Stat:",
+                         choices = c("local moran(ii)" = "local moran(ii)",
+                                     "expectation(eii)" = "expectation(eii)",
+                                     "variance(var_ii)" = "variance(var_ii)",
+                                     "std deviation(z_ii)" = "std deviation(z_ii)",
+                                     "P-value" = "p_value"),
+                         selected = "local moran(ii)"),
+             selectInput("LisaClass", "Show Lisa Classification",
+                         choices = c("mean" = "mean",
+                                     "median" = "median",
+                                     "pysal" = "pysal"),
+                         selected = "mean")
          )
   ),
   column(4,
-         box(title = "Local Moran's I Statistic",
+         box(title = "Local Moran's I - All Districts",
              status = "danger",
              solidHeader = TRUE,
              collapsible = TRUE,
              width = NULL,
              align = "left",
-             tmapOutput("LocalMoranMap", height = "700px", width = "100%")
+             plotOutput("LocalMoranMap", height = "700px", width = "100%")
          )
   ),
   column(4,
-         box(title = "Local Indicator of Spatial Association (p-values <0.05)",
+         box(title = "Local Indicator of Spatial Association (LISA) map",
              status = "danger",
              solidHeader = TRUE,
              collapsible = TRUE,
              width = NULL,
              align = "left",
-             tmapOutput("Lisa", height = "700px", width = "100%")
+             plotOutput("Lisa", height = "700px", width = "100%")
          )
   ),
   column(2,
@@ -722,21 +378,37 @@ Cluster2 <- fluidRow(
 Cluster2 <- tagList(Cluster2, 
                     fluidRow(
                       column(12,
-                             box(title = "Local Moran's I Results - Data Table",
+                             box(title = "Local Moran's I - All Districts",
                                  status = "danger",
                                  solidHeader = TRUE,
                                  collapsible = TRUE,
                                  width = NULL,
                                  align = "center",
-                                 dataTableOutput("localMoranDataTable"),
-                                 style = "height:600px; overflow-y: scroll; overflow-x: scroll;")
-                      )
+                                 dataTableOutput("localMoransTable1"),
+                                 style = "height:600px; overflow-y: scroll; overflow-x: scroll;"))
+                      #column(12,       
+                      #       box(
+                      #         title = "LISA results (P-values < 0.05)",
+                      #         status = "danger",
+                      #         solidHeader = TRUE,
+                      #         collapsible = TRUE,
+                      #         width = NULL,
+                      #         align = "center",
+                      #         dataTableOutput("localMoransTable2"),
+                      #         style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
+                      #)
                     )
+                    
 )
 
+
 #==========================================================  
-##Cluster and Outlier Analysis, 3rd Tab
+##Geospatial Analysis, 2nd Tab
 #==========================================================  
+
+#==========================================================  
+##Hot and Cold Spot Analysis
+#========================================================== 
 
 HotCold1 <- fluidRow(
   column(2,
@@ -769,29 +441,36 @@ HotCold1 <- fluidRow(
              selectInput(inputId = "numSims2",
                          label = "Number of Simulations for Gi*:",
                          choices = c(99,199,299,399,499),
-                         selected = 99)
+                         selected = 99),
+             selectInput("localgistats", "Show Local GI Stat:",
+                         choices = c("local gi*" = "local gi*",
+                                     "expectation(e_gi)" = "expectation(e_gi)",
+                                     "variance(var_gi)" = "variance(var_gi)",
+                                     "std deviation" = "std deviation",
+                                     "P-value" = "p_value"),
+                         selected = "local gi*")
          )
          
   ),
   column(4,
-         box(title = "GI* Statistics"
+         box(title = "GI* Statistics- All Districts"
              ,status = "danger"
              ,solidHeader = TRUE 
              ,collapsible = TRUE
              ,width = NULL
              ,align = "left"
-             ,tmapOutput("Gistarmap", height = "700px", width = "100%")
+             ,plotOutput("Gistarmap", height = "700px", width = "100%")
          )
   ),
   column(4,
          box(
-           title = "Significant Hot & Cold spot areas (p-values < 0.05)",
+           title = "Significant Hot & Cold spot areas",
            status = "danger",
            solidHeader = TRUE,
            collapsible = TRUE,
            width = NULL,
            align = "left",
-           tmapOutput("HotColdmap", height = "700px", width = "100%")
+           plotOutput("HotColdmap", height = "700px", width = "100%")
          )
   ),
   column(2,
@@ -811,78 +490,88 @@ HotCold1 <- tagList(HotCold1,
                     fluidRow(
                       column(12,
                              box(
-                               title = "GI* Statistics - Data Table",
+                               title = "GI* Statistics - All Districts",
                                status = "danger",
                                solidHeader = TRUE,
                                collapsible = TRUE,
                                width = NULL,
                                align = "center",
-                               dataTableOutput("AdaptiveGiStat"),
-                               style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
-                      )
+                               dataTableOutput("GiStat"),
+                               style = "height:500px; overflow-y: scroll;overflow-x: scroll;"))
+                      #column(12,       
+                      #        box(
+                      #            title = "GI* Statistics - Significant Hot & Cold spots (P-values < 0.05)",
+                      #            status = "danger",
+                      #            solidHeader = TRUE,
+                      #            collapsible = TRUE,
+                      #            width = NULL,
+                      #            align = "center",
+                      #            dataTableOutput("GiStat2"),
+                      #            style = "height:500px; overflow-y: scroll;overflow-x: scroll;")
+                      #  )
                     )
                     
 )
 
 #==========================================================  
-#Cluster and Outlier Analysis tab ----END
+##Geospatial Analysis, 3rd Tab
 #==========================================================  
 
 #==========================================================  
-##Emerging Hot Spot Analysis tab --- START
+##Emerging Hot Spot Analysis
 #==========================================================  
 
-EHSA1 <- fluidRow(
-  column(2,
-         box(title = "Analysis Period: 2021-2023, Quarterly",
-             status = "info",
-             solidHeader = FALSE,
-             width = NULL,
-             helpText("Filter options for Dataset"),
-             selectInput("eventType7", "Event Type:",
-                         choices = c("Battles" = "Battles",
-                                     "Violence against civilians" = "Violence against civilians",
-                                     "Protests" = "Protests",
-                                     "Explosions/Remote violence" = "Explosions/Remote violence",
-                                     "Riots" = "Riots" ),
-                         selected = "Battles"),
-             selectizeInput(inputId = "Admin2",
-                            label = "Select District",
-                            choices = unique(Space_2$DT),
-                            multiple = FALSE)
-             
-         ),
-         box(title = "Chart Interpretation",
-             status = "danger",
-             solidHeader = TRUE,
-             collapsible = TRUE,
-             width = NULL,
-             textOutput("GITrendText")
-         )
-  ),
-  column(10,
-         box(title = "GI* Trends per district"
-             ,status = "danger"
-             ,solidHeader = TRUE 
-             ,collapsible = TRUE
-             ,width = NULL
-             ,align = "left"
-             ,plotlyOutput("Giplot", height = "600px")
-         )
-  ),       
-  
-  column(12,
-         box(title = "Mann Kendall Test results"
-             ,status = "danger"
-             ,solidHeader = TRUE 
-             ,collapsible = TRUE
-             ,width = NULL
-             ,align = "left"
-             ,dataTableOutput("MKtest"),
-             style = "height:600px; overflow-y: scroll;overflow-x: scroll;")
-         
-  )
-)
+#EHSA1 <- fluidRow(
+#  column(2,
+#         box(title = "Analysis Period: 2021-2023, Quarterly",
+#             status = "info",
+#             solidHeader = FALSE,
+#             width = NULL,
+#             helpText("Filter options for Dataset"),
+#             selectInput("eventType7", "Event Type:",
+#                         choices = c("Battles" = "Battles",
+#                                     "Violence against civilians" = "Violence against civilians",
+#                                     "Protests" = "Protests",
+#                                     "Explosions/Remote violence" = "Explosions/Remote violence",
+#                                     "Riots" = "Riots" ),
+#                         selected = "Battles"),
+#             selectizeInput(inputId = "Admin2",
+#                            label = "Select District",
+#                            choices = unique(Space_2$DT),
+#                            multiple = FALSE)
+#             
+#         ),
+#         box(title = "Chart Interpretation",
+#             status = "danger",
+#             solidHeader = TRUE,
+#             collapsible = TRUE,
+#             width = NULL,
+#             textOutput("GITrendText")
+#         )
+#  ),
+#  column(10,
+#         box(title = "GI* Trends per district"
+#             ,status = "danger"
+#             ,solidHeader = TRUE 
+#             ,collapsible = TRUE
+#             ,width = NULL
+#             ,align = "left"
+#             ,plotlyOutput("Giplot", height = "600px")
+#         )
+#  ),       
+
+#  column(12,
+#         box(title = "Mann Kendall Test results"
+#             ,status = "danger"
+#             ,solidHeader = TRUE 
+#             ,collapsible = TRUE
+#             ,width = NULL
+#             ,align = "left"
+#             ,dataTableOutput("MKtest"),
+#             style = "height:600px; overflow-y: scroll;overflow-x: scroll;")
+
+#  )
+#)
 
 EHSA2 <- fluidRow(
   column(2,
@@ -890,23 +579,21 @@ EHSA2 <- fluidRow(
              status = "info",
              solidHeader = FALSE,
              width = NULL,
-             helpText("Filter options for ESHA map"),
+             helpText("Options for ESHA map"),
              selectInput("eventType8", "Event Type:",
                          choices = c("Battles" = "Battles",
                                      "Violence against civilians" = "Violence against civilians",
                                      "Protests" = "Protests",
-                                     "Explosions/Remote violence" = "Explosions/Remote violence",
-                                     "Riots" = "Riots" ),
+                                     "Explosions/Remote violence" = "Explosions/Remote violence"),
                          selected = "Battles"),
              selectInput(inputId = "numLags", 
-                         label = "Number of Lags:", 
+                         label = "Time Lag of spatial neighbours:", 
                          choices = c(1, 2, 3, 4, 5),
                          selected = 1),
              selectInput(inputId = "numSims", 
                          label = "Number of Simulations:", 
                          choices = c(99, 199, 299, 399, 499),
                          selected = 99)
-             
          ),
          box(title = "Chart Interpretation",
              status = "danger",
@@ -914,37 +601,110 @@ EHSA2 <- fluidRow(
              collapsible = TRUE,
              width = NULL,
              textOutput("EHSAText")
-             
          )
   ),
+  column(4,
+         box(title = "Emerging Hot Spot map",
+             status = "danger",
+             solidHeader = TRUE,
+             collapsible = TRUE,
+             width = NULL,
+             align = "left",
+             plotOutput("EHSAmap", height = "700px")
+         )
+  ), 
+  column(4,
+         box(title = "GI* Trends per district",
+             status = "danger",
+             solidHeader = TRUE,
+             collapsible = TRUE,
+             width = NULL,
+             align = "left",
+             plotlyOutput("Giplot2", height = "400px")
+         )
+  ),
+  column(2,
+         box(title = "Analysis Period: 2021-2023, Quarterly",
+             status = "info",
+             solidHeader = FALSE,
+             width = NULL,
+             helpText("Filter options for Dataset"),
+             selectInput("eventType9", "Event Type:",
+                         choices = c("Battles" = "Battles",
+                                     "Violence against civilians" = "Violence against civilians",
+                                     "Protests" = "Protests",
+                                     "Explosions/Remote violence" = "Explosions/Remote violence"),
+                         selected = "Battles"),
+             selectizeInput(inputId = "Admin2_2",
+                            label = "Select District",
+                            choices = unique(Space_2$DT),
+                            multiple = FALSE)
+         ),
+         box(title = "Chart Interpretation",
+             status = "danger",
+             solidHeader = TRUE,
+             collapsible = TRUE,
+             width = NULL,
+             textOutput("GITrend2Text")
+         )
+  ),
+  column(6,
+         box(title = "Distribution of EHSA classes",
+             status = "danger",
+             solidHeader = TRUE,
+             collapsible = TRUE,
+             width = NULL,
+             align = "left",
+             plotlyOutput("EHSAbar", height = "200px")
+         )
+  ),
+  #column(10,
+  #       box(title = "Emerging Hot Spot Analysis results",
+  #           status = "danger",
+  #           solidHeader = TRUE,
+  #           collapsible = TRUE,
+  #           width = NULL,
+  #           align = "left",
+  #           dataTableOutput("MKtest2")
+  #       )
+  #),
+  #column(2,
+  #       box(title = "Table Interpretation",
+  #           status = "danger",
+  #           solidHeader = TRUE,
+  #           collapsible = TRUE,
+  #           width = NULL,
+  #           textOutput("MKText")
   
   column(10,
-         box(title = "Emerging Hot Spot Analysis map"
-             ,status = "danger"
-             ,solidHeader = TRUE 
-             ,collapsible = TRUE
-             ,width = NULL
-             ,align = "left"
-             ,tmapOutput("EHSAmap", height = "600px")
+         box(title = "Mann Kendall Test results",
+             status = "danger",
+             solidHeader = TRUE,
+             collapsible = TRUE,
+             width = NULL,
+             align = "left",
+             dataTableOutput("MKtest2")
          )
-  ),       
-  
-  column(12,
-         box(title = "Distribution of EHSA classes"
-             ,status = "danger"
-             ,solidHeader = TRUE 
-             ,collapsible = TRUE
-             ,width = NULL
-             ,align = "left"
-             ,plotlyOutput("EHSAbar", height = "600px")
+  ),
+  column(2,
+         box(title = "Table Interpretation",
+             status = "danger",
+             solidHeader = TRUE,
+             collapsible = TRUE,
+             width = NULL,
+             textOutput("MKText")
+             
+             
+             
+             
          )
-         
   )
-  
 )
 
+
+
 #==========================================================  
-##Emerging Hot Spot Analysis tab ----END
+##Geospatial Analysis - END
 #==========================================================  
 
 
@@ -964,9 +724,27 @@ Confirm1 <- fluidRow(
                          label = "Year:",
                          choices = seq(2020,2023),
                          selected = 2021),
+             #hr(),
+             #selectizeInput(inputId = "Admin1_ggstat",
+             #                label = "Select Administrative Region(s)",
+             #                choices = unique(ACLED_MMR$admin1),
+             #                multiple = TRUE,
+             #                selected = c("Mon", "Yangon"), 
+             #                options = list(maxItems = 18, placeholder = 'Enter Region/State')
+             # ),
+             
+             hr(),
+             selectizeInput(inputId = "event_ggstat",
+                            label = "Select event type",
+                            choices = unique(ACLED_MMR$event_type),
+                            multiple = TRUE,
+                            selected = c("Battles", "Violence against civilians"), 
+                            options = list(maxItems = 6, placeholder = 'Enter Event Type')
+             ),
+             actionButton(inputId = "resetButton1", label = "Reset Selections"),
              hr(),
              selectInput(inputId = "Testtype",
-                         label = "Statistical Approach:",
+                         label = "Test Type:",
                          choices = c("parametric" = "p",
                                      "non-parametric" = "np",
                                      "robust" = "r",
@@ -990,7 +768,20 @@ Confirm1 <- fluidRow(
                                      "BY" = "BY",
                                      "fdr" = "fdr",
                                      "none" = "none"),
-                         selected = "holm")
+                         selected = "holm"),
+             # hr(),
+             #radioButtons(inputId = "PlotType",
+             #             label = "Plot Type",
+             #           choices = c("box" = "box", 
+             #                      "violin" = "violin",
+             #                     "boxviolin" = "boxviolin"),
+             #        selected = "box"),
+             hr(),
+             radioButtons(inputId = "Conlevel",
+                          label = "Confidence level",
+                          choices = c("0.95" = 0.95, 
+                                      "0.99" = 0.99),
+                          selected = 0.95),
          ),
          box(title = "Chart Interpretation",
              status = "danger",
@@ -1013,38 +804,38 @@ Confirm1 <- fluidRow(
 )
 
 
-Confirm2 <- fluidRow(
-  column(2,
-         box(title = "Analysis Period: 2020-2023",
-             status = "info",
-             solidHeader = FALSE,
-             width = NULL,
-             helpText("Filter Options for Dataset"),
-             selectInput(inputId = "YearMosaic",
-                         label = "Year:",
-                         choices = seq(2020,2023),
-                         selected = 2023)
-             
-         ),
-         box(title = "Chart Interpretation",
-             status = "danger",
-             solidHeader = TRUE,
-             collapsible = TRUE,
-             width = NULL,
-             textOutput("MosaicText")
-         )
-  ),
-  column(10,
-         box(title = "Mosaic Plot for event type per Region/State",
-             status = "danger",
-             solidHeader = TRUE,
-             collapsible = TRUE,
-             width = NULL,
-             align = "left",
-             plotlyOutput("Mosaicplot", height = "1400px")
-         )
-  )
-)
+#Confirm2 <- fluidRow(
+#  column(2,
+#         box(title = "Analysis Period: 2020-2023",
+#             status = "info",
+#             solidHeader = FALSE,
+#             width = NULL,
+#             helpText("Filter Options for Dataset"),
+#             selectInput(inputId = "YearMosaic",
+#                         label = "Year:",
+#                         choices = seq(2020,2023),
+#                         selected = 2023)
+
+#         ),
+#         box(title = "Chart Interpretation",
+#             status = "danger",
+#             solidHeader = TRUE,
+#             collapsible = TRUE,
+#             width = NULL,
+#             textOutput("MosaicText")
+#         )
+#  ),
+#  column(10,
+#         box(title = "Mosaic Plot for event type per Region/State",
+#             status = "danger",
+#             solidHeader = TRUE,
+#             collapsible = TRUE,
+#             width = NULL,
+#             align = "left",
+#             plotlyOutput("Mosaicplot", height = "1400px")
+#         )
+#  )
+#)
 
 
 Confirm3 <- fluidRow(
@@ -1056,10 +847,25 @@ Confirm3 <- fluidRow(
              helpText("Filter Options for Dataset"),
              selectInput(inputId = "YearMosaic2",
                          label = "Year:",
-                         choices = seq(2020,2023),
-                         selected = 2023)
-             
-         ),
+                         choices = seq(2010,2023),
+                         multiple = TRUE,
+                         selected = 2023),
+             selectizeInput(inputId = "Option1",
+                         label = "Region: ",
+                         choices = unique(ACLED_MMR_Mosaic$admin1),
+                         multiple = TRUE),
+             selectizeInput(inputId = "Option2",
+                         label = "Event Type: ",
+                         choices = unique(ACLED_MMR_Mosaic$event_type),
+                         multiple = TRUE
+                         ),
+             selectInput(inputId = "Option3",
+                          label = "Include Data with or without Fatalities: ",
+                          choices = unique(ACLED_MMR_Mosaic$Has_Fatalities),
+                          multiple = TRUE
+                         ),
+             actionButton("Mosaic2Update", "Update Plot")
+             ),
          box(title = "Chart Interpretation",
              status = "danger",
              solidHeader = TRUE,
@@ -1075,7 +881,7 @@ Confirm3 <- fluidRow(
              collapsible = TRUE,
              width = NULL,
              align = "left",
-             plotOutput("Mosaicplot2", height = "1400px")
+             plotOutput("Mosaicplot2", height = "700px")
          )
   )
 )
@@ -1092,28 +898,29 @@ Confirm3 <- fluidRow(
 #define the no of sub tabs needed
 
 ClusterSubTabs <- tabsetPanel(
-  #tabPanel("Distribution of Conflict Events", 
-  #        Cluster1),
+  
   tabPanel("Local Measures of Spatial Autocorrelation", 
            Cluster2),
   tabPanel("Hot & Cold Spot Analysis(HCSA)", 
-           HotCold1)
+           HotCold1),
+  tabPanel("Emerging Hot Spot Analysis", 
+           EHSA2)
 )
 
-ESHASubTabs <- tabsetPanel(
-  tabPanel("Gi* trend and Mann Kendall test", 
-           EHSA1),
-  tabPanel("Emerging Hot Spot Map", 
-           EHSA2)
-  
-)
+#ESHASubTabs <- tabsetPanel(
+#tabPanel("Gi* trend and Mann Kendall test", 
+#EHSA1),
+# tabPanel("Emerging Hot Spot Analysis", 
+#         EHSA2)
+
+#)
 
 
 ConfirmSubTabs <- tabsetPanel(
   tabPanel("One-Way Anova Test", 
            Confirm1),
-  tabPanel("Mosaic Plot",
-           Confirm2),
+  #tabPanel("Mosaic Plot",
+  #         Confirm2),
   tabPanel("Mosaic Plot-VCD",
            Confirm3)
   #Confirm2)
@@ -1145,10 +952,10 @@ body <- dashboardBody(
             ClusterSubTabs # add the sub tabs which was defined above
     ),
     #3rd tab content
-    tabItem(tabName = "EHSA",
-            
-            ESHASubTabs
-    ),
+    #tabItem(tabName = "EHSA",
+    
+    #      ESHASubTabs
+    # ),
     #4th tab content
     tabItem(tabName = "ConfirmatoryAnalysis",
             
@@ -1222,12 +1029,11 @@ server <- function(input, output, session) {
     
     ungroup()            
   
-  Region_Summary <- ACLED_MMR %>%
-    group_by(year, country, admin1,event_type, disorder_type) %>%
+  ACLED_MMR_Mosaic <- ACLED_MMR %>%
+    group_by(event_id_cnty, year, country, admin1,event_type, disorder_type, fatalities) %>%
     summarize(
-      Total_incidents = n(),
-      Total_Fatalities = sum(fatalities, na.rm=TRUE)
-    )
+      Has_Fatalities = ifelse(fatalities > 0, "Has Fatalities", "No Fatalities")) %>%
+    ungroup()
   
   
   # =============================    
@@ -1418,389 +1224,19 @@ server <- function(input, output, session) {
     by adjusting the desired data classification type and number of classes (or data ranges)." 
   })
   
-  #==========================================================  
-  # Explore Trends ---
-  #==========================================================  
-  final_exploretime <- reactive({
-    req(input$YearSlider_et1)
-    req(input$EventSelect_et1)
-    req(input$AdminSelect_et1)
-    filter(final, event_type %in% input$EventSelect_et1) %>%
-      filter(final$admin1 %in% input$AdminSelect_et1) %>%
-      filter(final$year %in% input$YearSlider_et1)
-    
-  })
   
-  calendar <- final %>%
-    filter(fatalities > 0) %>%
-    group_by(year, event_date, admin1) %>%
-    mutate(
-      wkday = wday(event_date),
-      day = mday(event_date),
-      month = factor(months(event_date), levels = rev(month.name)),
-      week = isoweek(event_date),
-      year_month = format(zoo::as.yearmon(event_date), "%y-%m")
-    ) %>%
-    ungroup()
-  
-  
-  # Render Line Chart --- 
-  output$line_et1 <- renderHighchart({
-    
-    year_fata <- calendar %>%
-      filter(fatalities > 0) %>%
-      group_by(year_month) %>%
-      select(year, month, year_month, fatalities) %>%
-      summarise(Total_Fatalities = sum(fatalities),
-                Total_Incidents = n()) %>%
-      ungroup()
-    
-    hc_plot1 <-  highchart() %>% 
-      hc_add_series(year_fata, hcaes(x = year_month, y = Total_Fatalities), type = "line", 
-                    name = "Total Fatalities", color = "lightcoral") %>%
-      hc_add_series(year_fata, hcaes(x = year_month, y = Total_Incidents), type = "line", 
-                    name = "Total Incidents", color = "black") %>%
-      hc_tooltip(crosshairs = TRUE, borderWidth = 1.5, headerFormat = "", 
-                 backgroundColor = "#FCFFC5",
-                 borderWidth = 5,
-                 pointFormat = "<b>20{point.year_month}</b> 
-                                 <br> Fatalities: <b>{point.Total_Fatalities}</b>
-                                 <br> Incidents: <b>{point.Total_Incidents}</b>"
-      ) %>%
-      hc_title(text = "Armed Conflict Over The Years") %>% 
-      hc_subtitle(text = "2010 to 2023") %>%
-      hc_xAxis(title = list(text = "2010-2023"), labels = list(enabled = FALSE)) %>%
-      hc_yAxis(title = list(text = "Frequency"),
-               allowDecimals = FALSE,
-               plotLines = list(list(
-                 color = "lightcoral", width = 1, dashStyle = "Dash",
-                 value = mean(year_fata$Total_Fatalities),
-                 label = list(text = paste("Average Monthly Fatalities:", round(mean(year_fata$Total_Fatalities))),
-                              style = list(color = 'lightcoral', fontSize = 20))))) 
-    hc_plot1
-    
-  })
-  
-  ########################################
-  final_explorecalendar <- reactive({
-    req(input$InciFata_et2)
-    req(input$YearSelect_et2)
-    filter(final, year == input$YearSelect_et2)
-    
-  })
-  
-  # Render calendar --- 
-  # selected years
-  # years <- c(2010:2023)
-  years <- 2023
-  
-  cal_conflict <- calendar %>%
-    group_by(year, day, month) %>%
-    filter(year == years) %>%
-    summarise(Total_Fatalities = sum(fatalities),
-              Total_Incidents = n()) %>%
-    ungroup()
-  
-  output$calendar_et1 <- renderPlotly({
-    # tooltip
-    tooltip_heat <- paste("<b>", cal_conflict$day, " ", cal_conflict$month, " ",
-                          cal_conflict$year, "</b>", 
-                          "\nFatalities : ", cal_conflict$Total_Fatalities,
-                          "\nIncidents : ", cal_conflict$Total_Incidents)
-    
-    heat <- ggplot(cal_conflict, aes(x = day, y = month, fill = Total_Fatalities)) + 
-      geom_tile(color = "white", size = 1, aes(text = tooltip_heat)) + 
-      theme_tufte(base_family = "Helvetica") + 
-      coord_equal() +
-      scale_fill_gradient(name = "Total Fatalities", low = "#fff2f4", 
-                          high = "lightcoral") +
-      labs(x = "Days of Month", 
-           y = "", 
-           title = paste("Fatalities due to Armed Conflicts in Myanmar in ", years),
-           caption = "Data Source: ACLED (2023)") +
-      theme(axis.ticks = element_blank(),
-            axis.text.x = element_text(size = 7),
-            plot.title = element_text(hjust = 0.5),
-            legend.title = element_text(size = 8),
-            legend.text = element_text(size = 6),
-            legend.position = "top") +
-      scale_x_continuous(breaks = seq(min(cal_conflict$day), max(cal_conflict$day), 
-                                      by = 2),
-                         labels = seq(min(cal_conflict$day), max(cal_conflict$day), 
-                                      by = 2))
-    heat_plotly <- ggplotly(heat, tooltip = "text")
-    
-    heat_plotly
-  })
-  
-  ########################################
-  output$trendtext <- renderText({ 
-    "This space is saved for interpretation of charts." 
-  })
-  
-  #==========================================================  
-  # Explore Distributions ---
-  #==========================================================  
-  final_exploretime <- reactive({
-    req(input$YearSlider_ed1)
-    filter(final, year %in% input$YearSlider_ed1)
-    
-  })
-  
-  box_pts <- final %>%
-    filter(fatalities >0)
-  
-  # Render Boxplot1 --- 
-  
-  output$box_ed1 <- renderPlotly({
-    
-    box1 <- ggplot(box_pts, aes(x = forcats::fct_infreq(admin1), y = event_date, 
-                                color = factor(admin1))) +
-      
-      geom_boxplot(width = .2, color = "#000000", fill = NA, size = .5, 
-                   outlier.shape = NA, position = position_nudge(.25)) +
-      geom_sina(method = "density", alpha = .3) +
-      coord_flip()+
-      theme_minimal() +
-      theme(legend.position = "none", 
-            plot.title.position = "plot") +
-      labs(title = "Frequency of Conflict Has Increased Over Time in the Largest Sub-national Administrative Region in Myanmar", subtitle = "Year 2010 to Year 2023") +
-      labs(y = "Year (2010-2023)",
-           x = "Adminstrative Region 1", 
-           caption = "Data Source: ACLED (2023)")
-    
-    ggplotly(box1)
-  })
-  
-  # Render Boxplot2 --- 
-  output$box_ed2 <- renderPlotly({
-    # tooltip_box <- paste("<b>", final$date, "</b>", "\nFatalities : ", final$fatalities)
-    
-    box2 <- ggplot(box_pts, aes(x = forcats::fct_infreq(event_type), y = event_date, 
-                                color = factor(event_type), fill = factor(event_type))) +
-      geom_sina(method = "density", alpha = .3) +
-      geom_boxplot(width = .2, color = "#000000", fill = NA, size = .5, 
-                   outlier.shape = NA, position = position_nudge(.25)) +
-      coord_flip() +
-      theme_minimal() +
-      theme(legend.position = "none", 
-            plot.title.position = "plot") +
-      labs(title = "Battles, Explosion & Violence against Civilian Have Been Happening in Myanmar Over Time\n With More Occurrence Happening From Year 2020 Onwards", subtitle = "Year 2010 to Year 2023") +
-      labs(y = "Year (2010-2023)",
-           x = "Event Types", 
-           caption = "Data Source: ACLED (2023)")
-    
-    ggplotly(box2)
-  })
-  
-  ########################################
-  output$distributiontext <- renderText({ 
-    "A jittered-cum-boxplot shows the distribution of the armed conflicts incidents in Myanamr and how it has changed over the years.
-    It helps to determine how spread out the incidents were across the years, 
-    how it started/ ended in certain years or high concentrations in certain years. 
-    "  
-  })
-  
-  #==========================================================
-  # Explore Network Relationship ---
-  #==========================================================    
-  final_explorenetwork <- reactive({
-    req(input$EventSelect_en1)
-    req(input$AdminSelect_en1)
-    req(input$YearSelect_en1)
-    filter(final, event_type %in% input$EventSelect_en1) %>%
-      filter(final$admin1 %in% input$AdminSelect_en1) %>%
-      filter(final$year == input$YearSelect_en1)
-    
-  })
-  
-  # select year
-  years <- 2023  # input$YearSelect_en1
-  
-  # calculate frequency
-  conflict_count <- final %>% 
-    group_by(actor1) %>% 
-    filter (year == years) %>%
-    summarise(frequency = n()) %>%
-    arrange(desc(frequency)) 
-  
-  conflict_count2 <- final %>% 
-    group_by(actor2) %>% 
-    filter (year == years) %>%
-    summarise(frequency = n()) %>%
-    arrange(desc(frequency))
-  
-  colnames(conflict_count) = c("actor","Freq")
-  colnames(conflict_count2) = c("actor","Freq")
-  
-  # combine both actor 1 & 2
-  final_conflict_count = rbind(conflict_count,conflict_count2)
-  
-  final_conflict_count2 = final_conflict_count %>%
-    group_by(actor) %>%
-    summarise(FrequencyConflicts = sum(Freq)) %>%
-    arrange(desc(FrequencyConflicts))
-  
-  # trim actor/ assoc_actor
-  final$actor1 = trimws(str_replace(final$actor1, "[Õ]", ""))
-  final$actor2  = trimws(str_replace(final$actor2, "[Õ]", ""))
-  final$assoc_actor_1 = trimws(str_replace(final$assoc_actor_1, "[Õ]", ""))
-  final$assoc_actor_2 = trimws(str_replace(final$assoc_actor_2, "[Õ]", ""))
-  
-  assoc1 = final %>%
-    filter(!is.na(actor1)) %>%
-    filter(!is.na(assoc_actor_1)) %>%
-    filter(!(actor1 == "")) %>%
-    filter(!(assoc_actor_1 == "")) %>%
-    select(actor1,assoc_actor_1)
-  
-  assoc2 = final %>%
-    filter(!is.na(actor2)) %>%
-    filter(!is.na(assoc_actor_2)) %>%
-    filter(!(actor2 == "")) %>%
-    filter(!(assoc_actor_2 == "")) %>%
-    select(actor2,assoc_actor_2)
-  
-  colnames(assoc1) = c("actor","assoc_actor") 
-  colnames(assoc2) = c("actor","assoc_actor") 
-  
-  # combine both assoc 1 & 2
-  combined1 = rbind(assoc1,assoc2)
-  
-  combined2 = combined1 %>%
-    group_by(actor,assoc_actor) %>%
-    tally(sort = TRUE) 
-  
-  
-  final_conflict_count3 = trimws(final_conflict_count2$actor)
-  
-  combined3 = combined2 %>%
-    filter(actor %in% final_conflict_count3)
-  
-  
-  # network graph
-  viz_actors_12 <- function(actors_12) {
-    set.seed(1234)
-    a <- grid::arrow(type = "closed", length = unit(.15, "inches"))
-    
-    actors_12 %>%
-      graph_from_data_frame() %>%
-      ggraph(layout = "fr") +
-      geom_edge_link(aes(edge_alpha = n, edge_width = n), edge_colour = "lightcoral") +
-      geom_node_point(size = 5) +
-      geom_node_text(aes(label = name), repel = TRUE,
-                     point.padding = unit(0.5, "lines")) +
-      theme_void()
-  }
-  
-  # Render network --- 
-  output$network_en1 <- renderPlot({
-    combined3 %>%
-      filter(n >= 300) %>%
-      viz_actors_12
-  })
-  
-  
-  ########################################
-  output$networktext <- renderText({ 
-    "A network graph schematically depict the nodes and connections amongst the actors and their associations involved in the armed conflicts in Myanmar.
-     The line thickness indicates the strength of connections (e.g. thicker line denotes stronger connection) among actors in the network." 
-  })
   
   #==========================================================
   # END of Exploratory Module
   #==========================================================
   
   #==========================================================
-  # START of Cluster & Outlier Analysis Module
+  # START Geospatial Analysis Module
   #==========================================================   
   
   
-  #creating the Plots- for Cluster & Outlier Analysis 
-  
   #==========================================================
-  # Proportional Symbol map in Cluster 1 UI - KIV
-  #==========================================================   
-  
-  # Reactive expression to filter data based on input from UI
-  #PointMapYears <- reactive({
-  #filtered_data <- conflict_sf %>% 
-  #filter(event_type == input$eventType1, year %in% input$Yearpointmap)
-  #return(filtered_data)  # Ensure the filtered data is returned
-  #})
-  
-  # Create the map based on filtered data
-  #output$Pointmap <- renderLeaflet({
-  #data_years <- PointMapYears() # Use the reactive expression to get filtered data
-  
-  #if(nrow(data_years) == 0){  # Check if data is empty
-  # return(NULL)  # Return NULL to avoid trying to plot an empty map
-  #}
-  
-  #scaleFactor <- 2 # Define your scale factor
-  
-  # Now use data_years instead of Battles
-  #leaflet(data_years) %>%
-  # addProviderTiles(providers$CartoDB.Positron) %>%
-  #addPolygons(data = mmr_shp_mimu_1, color = "#444444", weight = 1, fillOpacity = 0.5) %>%
-  #addCircleMarkers(popup = ~paste("Event:", event_type, "<br>State/Region:", admin1, 
-  #"<br>Actor1:", actor1, "<br>Actor2:", actor2,
-  #"<br>Year:", year, "<br>Fatalities:", fatalities),
-  #radius = ~sqrt(fatalities) * scaleFactor,
-  #fillColor = "red", fillOpacity = 0.4, color = "#FFFFFF", weight = 1) %>%
-  #setView(lng = 96.1603, lat = 19.745, zoom = 6)
-  #})
-  
-  #output$PointMaptext <- renderText({ 
-  # "Proportional symbol maps are a class of maps that use the visual variable of size 
-  #  to represent differences in the magnitude of a discrete, 
-  # abruptly changing phenomenon. Here, the number of fatalities are mapped to the sizes of the circles" 
-  #})
-  
-  #==========================================================
-  # choropleth in Cluster 1 UI - KIV
-  #==========================================================   
-  
-  
-  #tmap_mode("plot")
-  
-  #output$choropleth <- renderTmap({
-  # Dynamically filter data based on user input
-  # data_filtered <- ACLED_MMR_admin2 %>%
-  #  filter(year == input$Yearchoromap, event_type == input$eventType2) 
-  
-  
-  # Check if the filtered data is empty to avoid errors
-  #  if(nrow(data_filtered) == 0) {
-  #   return(NULL)  # Return NULL if there's no data to avoid plotting errors
-  #  }
-  
-  # Determine the column to use for filling based on user selection
-  #  fillColumn <- ifelse(input$metricType == "Fatalities", "Fatalities", "Incidents")
-  
-  #  tm_map <- tm_shape(mmr_shp_mimu_2) +
-  #    tm_borders() +  # Draws borders for all regions
-  #    tm_fill(col = "white", alpha = 0.5, title = "Background") +
-  
-  #   tm_shape(data_filtered) +
-  #    tm_fill(fillColumn,
-  #           n = 5,
-  #            style = input$mapStyle,
-  #            palette = "Reds")+
-  #    tm_borders(alpha = 0.5)
-  
-  #  tm_map
-  #  })
-  
-  #  output$ChoroMaptext <- renderText({ 
-  #    "A choropleth map visualises spatial pattern or distribution across Myanmar's
-  #    different administrative region 2. This can be further customised 
-  #    by adjusting the year, event type, count of Incidents or Fatalities and data classification type." 
-  #  })
-  
-  
-  #==========================================================
-  # Local Morans's I Statistics and LISA map in Cluster 2
+  # Local Measures of Spatial Correlation
   #==========================================================   
   
   localMIResults <- reactive({
@@ -1826,6 +1262,11 @@ server <- function(input, output, session) {
         .before = 5) %>%
       unnest(local_moran)
     
+    lisa <- lisa %>%
+      rename("local moran(ii)" = "ii", "expectation(eii)" = "eii",
+             "variance(var_ii)" = "var_ii", "std deviation(z_ii)" = "z_ii",
+             "p_value" = "p_ii")
+    
     return(lisa)       
     
     
@@ -1833,18 +1274,17 @@ server <- function(input, output, session) {
   
   
   # Render the map of Local Moran's I values
-  output$LocalMoranMap <- renderTmap({
+  output$LocalMoranMap <- renderPlot({
     df <- localMIResults()
     
     if(is.null(df) || nrow(df) == 0) return()  # Exit if no data
     
     # Map creation using tmap
     localMI_map <- tm_shape(df) +
-      tm_fill(col = "ii", style = "pretty", palette = "RdBu", title = "Local Moran's I") +
+      tm_fill(col = input$localmoranstats, style = "pretty", palette = "RdBu", title = input$localmoranstats) +
       tm_borders() 
     
-    localMI_map + 
-      tm_view(set.zoom.limits = c(5,7))
+    localMI_map 
   })
   
   
@@ -1853,12 +1293,12 @@ server <- function(input, output, session) {
   # LISA Map in Cluster 2 
   #==========================================================  
   
-  output$Lisa <- renderTmap({
+  output$Lisa <- renderPlot({
     df <- localMIResults()
     if(is.null(df)) return()
     
     lisa_sig <- df  %>%
-      filter(p_ii < 0.05)
+      filter(p_value < 0.05)
     
     
     lisamap <- tm_shape(df) +
@@ -1866,17 +1306,18 @@ server <- function(input, output, session) {
       tm_borders() +
       
       tm_shape(lisa_sig) +
-      tm_fill(col = "mean",  
+      tm_fill(col = input$LisaClass,  
               palette = "-RdBu",  
-              title = "Significance") +
+              title = (paste("Significance:", input$LisaClass))) +
       tm_borders(alpha = 0.4)
     
     
-    lisamap + 
-      tm_view(set.zoom.limits = c(5,7))
+    lisamap #+ 
+    #tm_view(set.zoom.limits = c(5,7))
     
     
   })
+  
   
   
   #==========================================================
@@ -1884,27 +1325,43 @@ server <- function(input, output, session) {
   #==========================================================  
   
   # Render the data table for Local Moran's I results
-  output$localMoranDataTable <- renderDataTable({
+  output$localMoransTable1 <- renderDataTable({
     df <- localMIResults()
     
     # Check if data is available
-    if (!is.null(df)) {
-      
-      df
-    }
+    if (is.null(df)) return()
+    
+    df
+    
+    
   })
   
+  # output$localMoransTable2 <- renderTable({
+  #    df2 <- localMIResults()
+  
+  # Check if data is available
+  #    if (is.null(df2)) return()
+  
+  #    lisa_sig2 <- df2  %>%
+  #      filter(p_value < 0.05)
+  
+  #    lisa_sig2
+  
+  #  })
+  
   output$MoransItext <- renderText({ 
-    "Local Moran's I, is a spatial statistic that detects and quantifies 
-    spatial clustering or dispersion within a given geographic area.
-    It assesses spatial patterns at a local level, determining if features form 
-    significant clusters (high-high or low-low) or outliers (high-low or low-high) 
-    compared to neighboring features.
-    
-    In our analysis, we're examining if certain areas (admin region 2) exhibit higher or 
-    lower incident rates of a specific event type than expected by chance alone, 
-    indicating deviations from a random spatial distribution." 
+    "Local Moran's I is a spatial statistic used to detect and quantify spatial clustering 
+    or dispersion within a geographic area. It assesses spatial patterns at a local level, 
+    determining if features form significant clusters (high-high or low-low) or outliers 
+    (high-low or low-high) in relation to neighboring features. High and positive Local Moran's 
+    I values indicate clustering of similar values, reflecting a concentration of similar incidents. 
+    In contrast, low or negative values point to outliers, where an area's incident rate significantly 
+    differs from that of its neighbors. The Lisa map plots significant areas 
+    (p-value < 0.05) where incident rates are notably higher or lower than expected, thus deviating from 
+    a random spatial distribution." 
   })
+  
+  
   
   
   #==========================================================
@@ -1980,11 +1437,15 @@ server <- function(input, output, session) {
         .before = 5) %>%
       unnest(local_Gi)
     
+    HCSA <- HCSA %>%
+      rename("local gi*" = "gi_star", "expectation(e_gi)" = "e_gi",
+             "variance(var_gi)" = "var_gi", "std deviation" = "std_dev")
+    
     return(HCSA)
     
   })
   
-  output$Gistarmap <- renderTmap({
+  output$Gistarmap <- renderPlot({
     df <- GiData()
     
     # Exit if there's no data to plot
@@ -1993,17 +1454,17 @@ server <- function(input, output, session) {
     
     # Create the choropleth map for GI stats
     Gi_map <- tm_shape(df) +
-      tm_fill(col = "gi_star", 
+      tm_fill(col = input$localgistats, 
               palette = "-RdBu", 
-              title = "Local Gi") +
+              title = input$localgistats) +
       tm_borders()
     
-    Gi_map + 
-      tm_view(set.zoom.limits = c(5,7))
+    Gi_map #+ 
+    #tm_view(set.zoom.limits = c(5,7))
   })
   
   
-  output$HotColdmap <-  renderTmap({
+  output$HotColdmap <-  renderPlot({
     df <- GiData()
     
     if(is.null(df) || nrow(df) == 0) return() #Exit if no data
@@ -2018,36 +1479,47 @@ server <- function(input, output, session) {
       tm_borders() +
       
       tm_shape(HCSA_sig) +
-      tm_fill(col = "gi_star",  
+      tm_fill(col = "local gi*",  
               palette = "-RdBu",  
-              title = "gi_star") +
+              title = "local gi*") +
       tm_borders(alpha = 0.4)
     
-    HSCAmap + 
-      tm_view(set.zoom.limits = c(5,7))
+    HSCAmap 
   })
   
   
   
   
   
-  output$AdaptiveGiStat <- renderDataTable({
-    data_with_gi <- GiData()  # Reactive function for data preparation
-    if(is.null(data_with_gi)) {
-      return(data.frame())  # Return an empty data frame if data is null
-    }
-    return(data_with_gi)
+  output$GiStat <- renderDataTable({
+    data_with_gi <- GiData()  
+    if(is.null(data_with_gi)) return ()
+    
+    data_with_gi
   })
+  
+  #  output$GiStat2 <- renderDataTable({
+  #    data_with_gi2 <- GiData()  
+  #    if(is.null(data_with_gi2)) return ()
+  
+  #    HCSA_sig2 <- data_with_gi2  %>%
+  #      filter(p_value < 0.05)  
+  
+  #    HCSA_sig2
+  #  })
+  
   
   output$HotColdText <- renderText({ 
     "HCSA uses spatial weights to identify locations of statistically significant 
-    hot spots and cold spots in an spatially weighted attribute that are in proximity 
+    hot & cold spots in an spatially weighted attribute, in proximity 
     to one another based on a calculated distance. 
+    
     The analysis groups features when similar high (hot) or low (cold) values are found in a cluster.
     
-    Here we are utilizing the Getis and Ord’s G statistics. 
-    High positive G values indicate hot spots—areas where high values cluster together
-    while low negative G values indicate cold spots—areas where low values cluster together." 
+    High positive Gi values indicate hot spots areas where high values cluster together,
+    while low negative Gi values indicate cold spots—areas where low values cluster together.
+    
+    The Hot & Cold spot map plots significant areas where p-value < 0.05" 
   })
   
   
@@ -2060,109 +1532,16 @@ server <- function(input, output, session) {
   # START of Emerging Hot spot Analysis Module
   #==========================================================
   
+  
   #==========================================================
-  # GI* Trends per district & Mann Kendall test
+  # EMERGING HOT SPOT ANALYSIS
   #==========================================================
-  
-  
-  
-  EHSAData <- reactive({
-    space_data <- Space_2 %>%
-      filter(event_type == input$eventType7)
-    
-    
-    Filtered_space <- space_data %>%
-      select(-event_type, -year, -Fatalities)
-    
-    Quarterly_spt <- spacetime(Filtered_space, mmr_shp_mimu_2,
-                               .loc_col = "DT",
-                               .time_col = "quarter")
-    
-    Quarterly_nb <- Quarterly_spt %>%
-      activate("geometry") %>%
-      mutate(nb = include_self(st_contiguity(geometry)),
-             wt = st_inverse_distance(nb, geometry,
-                                      scale = 1,
-                                      alpha = 1),
-             .before = 1) %>%
-      set_nbs("nb") %>%
-      set_wts("wt")
-    
-    gi_stars <- Quarterly_nb %>% 
-      group_by(quarter) %>% 
-      mutate(gi_star = local_gstar_perm(
-        Incidents, nb, wt)) %>% 
-      tidyr::unnest(gi_star)
-    
-    return(gi_stars)
-    
-  }) 
-  
-  
-  output$Giplot <- renderPlotly({
-    
-    df <- EHSAData()
-    
-    # Exit if there's no data to plot
-    if(is.null(df) || nrow(df) == 0) return() #Exit if no data
-    
-    
-    filtered_df <- df %>%
-      filter(DT == input$Admin2) %>%
-      select(DT, quarter, gi_star)
-    
-    p1 <- ggplot(data = filtered_df, 
-                 aes(x = quarter, 
-                     y = gi_star)) +
-      geom_line() +
-      theme_light() +
-      ggtitle(paste("GI* Trends for District:", input$Admin2))
-    
-    ggplotly(p1)
-    
-    
-  })
-  
-  
-  EHSADataMKTest <- reactive({
-    df <- EHSAData() 
-    
-    ehsa3 <- df %>%
-      group_by(DT) %>%
-      summarise(mk = list(
-        unclass(
-          Kendall::MannKendall(gi_star)))) %>%
-      tidyr::unnest_wider(mk)
-    
-    return(ehsa3)
-  })
-  
-  
-  output$MKtest <- renderDataTable({
-    # Get the Mann-Kendall test results
-    mkResults <- EHSADataMKTest()
-    
-    # Return the results to render them as a table
-    mkResults
-  })
-  
-  
-  output$GITrendText <- renderText({ 
-    "The GI* trend plot shows the changes in the Local Gi* statistics 
-      per district, for each event type.
-      The Mann-Kendall test is a non-parametric statistical test used to identify trends 
-      in a series of data. Its primary purpose is to determine whether there is a 
-      monotonic trend over time in the observed data. 
-      To view significant emerging hot/cold spots, users can sort 
-      the tau & sl variables in descending order " 
-  })
-  
   
   #==========================================================
   # Distribution of EHSA classes and EHSA Map
   #==========================================================
   
-  EHSAData1 <- reactive({
+  EHSAData <- reactive({
     space_data <- Space_2 %>%
       filter(event_type == input$eventType8)
     
@@ -2177,7 +1556,7 @@ server <- function(input, output, session) {
     ehsa3 <- emerging_hotspot_analysis(
       x = Quarterly_spt, 
       .var = "Incidents", 
-      k = as.numeric(input$numLags), 
+      k = as.numeric(input$numLags),
       nsim = as.numeric(input$numSims)
       
     )
@@ -2187,19 +1566,32 @@ server <- function(input, output, session) {
   }) 
   
   output$EHSAbar <- renderPlotly({
-    df <- EHSAData1() 
+    df <- EHSAData()
     
-    EHSAbar1 <- ggplot(data = df, aes(x = classification)) +
-      geom_bar() +
-      theme_minimal()
+    df <- df %>%
+      filter(p_value < 0.05) %>%
+      group_by(classification) %>%
+      summarise(count = n()) %>%
+      ungroup() 
     
-    ggplotly(EHSAbar1) 
+    # Reorder classification based on count in ascending order
+    df <- df %>%
+      mutate(classification = fct_reorder(classification, count))
     
+    EHSAbar <- ggplot(data = df, aes(x = classification, y = count)) +
+      geom_bar(stat = "identity") + 
+      coord_flip() +
+      theme_minimal() +
+      theme(axis.title.y = element_blank())
     
+    ggplotly(EHSAbar)
   })
   
+  
+  
+  
   EHSAMapdata <- reactive({
-    df <- EHSAData1() 
+    df <- EHSAData() 
     
     mmr3_ehsa <- mmr_shp_mimu_2 %>%
       left_join(df,
@@ -2211,7 +1603,7 @@ server <- function(input, output, session) {
     return(mmr3_ehsa)
   })
   
-  output$EHSAmap <- renderTmap({
+  output$EHSAmap <- renderPlot({
     df <- EHSAMapdata()
     if(is.null(df)) return()
     
@@ -2227,22 +1619,155 @@ server <- function(input, output, session) {
       tm_borders(alpha = 0.4)
     
     
-    ehsamap + 
-      tm_view(set.zoom.limits = c(5,7))
+    ehsamap 
     
     
   })
   
+  #  output$MKtest2 <- renderDataTable({
+  #    # Get the Mann-Kendall test results
+  #    EHSATable <- EHSAMapdata()
+  #    if(is.null(df)) return()
   
   
+  #    ehsa_sig3 <- EHSATable  %>%
+  #      filter(p_value < 0.05) %>%
+  #      select(-DT_PCODE, -DT_MMR, -PCode_V) %>%
+  #      rename("District" = "DT")
+  
+  
+  # Return the results to render them as a table
+  #  ehsa_sig3
+  #  })
   
   
   output$EHSAText <- renderText({ 
     "Emerging Hot Spot Analysis identifies trends in spatial clustering 
-      over a period of time. Emerging hot spot analysis combines the Getis-Ord Gi* statistic 
-      with the Mann-Kendall 
-      trend test to determine if there is a temporal trend associated with local clustering of hot and cold spots."
+      over a period of time. It combines the Getis-Ord Gi* statistic 
+      with the Mann-Kendall trend test to determine if there 
+    is a temporal trend associated with local clustering of hot and cold spots.
+    
+    The Emerging Hot Spot map plots significant areas where p-values < 0.05.
+    Each location is classified into one of 17 categories based on 
+    ESRI's emerging hot spot classification criteria."
   })
+  
+  
+  
+  
+  
+  EHSAData2 <- reactive({
+    space_data2 <- Space_2 %>%
+      filter(event_type == input$eventType9)
+    
+    
+    Filtered_space2 <- space_data2 %>%
+      select(-event_type, -year, -Fatalities)
+    
+    Quarterly_spt2 <- spacetime(Filtered_space2, mmr_shp_mimu_2,
+                                .loc_col = "DT",
+                                .time_col = "quarter")
+    
+    Quarterly_nb2 <- Quarterly_spt2 %>%
+      activate("geometry") %>%
+      mutate(nb = include_self(st_contiguity(geometry)),
+             wt = st_inverse_distance(nb, geometry,
+                                      scale = 1,
+                                      alpha = 1),
+             .before = 1) %>%
+      set_nbs("nb") %>%
+      set_wts("wt")
+    
+    gi_stars <- Quarterly_nb2 %>% 
+      group_by(quarter) %>% 
+      mutate(gi_star = local_gstar_perm(
+        Incidents, nb, wt)) %>% 
+      tidyr::unnest(gi_star)
+    
+    return(gi_stars)
+    
+  }) 
+  
+  
+  output$Giplot2 <- renderPlotly({
+    
+    df2 <- EHSAData2()
+    
+    # Exit if there's no data to plot
+    if(is.null(df2) || nrow(df2) == 0) return() #Exit if no data
+    
+    
+    filtered_df2 <- df2 %>%
+      filter(DT == input$Admin2_2) %>%
+      select(DT, quarter, gi_star)
+    
+    p2 <- ggplot(data = filtered_df2, 
+                 aes(x = quarter, 
+                     y = gi_star)) +
+      geom_line() +
+      theme_light() +
+      theme(axis.text.x = element_blank()) +
+      ggtitle(paste("GI* Trends for District:", input$Admin2_2))
+    
+    ggplotly(p2)
+    
+    
+  })
+  
+  
+  output$GITrend2Text <- renderText({ 
+    "GI* trend plot shows changes in the Local Gi* per district, for each event type from Q1 2021 to Q4 2023"
+    
+  })  
+  
+  EHSADataMKTest2 <- reactive({
+    df2 <- EHSAData2() 
+    
+    ehsa32 <- df2 %>%
+      group_by(DT) %>%
+      summarise(mk = list(
+        unclass(
+          Kendall::MannKendall(gi_star)))) %>%
+      tidyr::unnest_wider(mk)
+    
+    return(ehsa32)
+  })
+  
+  
+  output$MKtest2 <- renderDataTable({
+    # Get the Mann-Kendall test results
+    mkResults2 <- EHSADataMKTest2()
+    
+    mkResults2 <- mkResults2 %>%
+      rename("District" = "DT")
+    
+    # Return the results to render them as a table
+    mkResults2
+  })
+  
+  #output$MKText <- renderText({ 
+  #  "The Mann-Kendall test determines whether there is a 
+  #    monotonic trend over time in the observed data.
+  
+  #  First the Gi* statistic for each location in each time period (time-slice) is calculated. 
+  #  Next, the Mann-Kendall trend test is done to identify any temporal trend in Gi* values 
+  #  over all time periods. Each location is then classified into one of 17 categories based on 
+  #  ESRI's emerging hot spot classification criteria. This tables shows results for P-values < 0.05.
+  
+  #  Tau ranges between -1 and 1 where -1 is a perfectly decreasing series and 1 is a perfectly increasing series."
+  
+  #})
+  
+  output$MKText <- renderText({ 
+    "The Mann-Kendall test is a non-parametric statistical test used to identify trends 
+      in a series of data. Its primary purpose is to determine whether there is a 
+      monotonic trend over time in the observed data. 
+      To view significant emerging hot/cold spots, users can sort 
+      the tau & sl variables in descending order."
+    
+  })  
+  
+  
   
   #==========================================================
   # END of Emerging Hot spot Analysis Module
@@ -2256,17 +1781,24 @@ server <- function(input, output, session) {
   
   # Anova test
   
+  observeEvent(input$resetButton1, {
+    #updateSelectizeInput(session, "Admin1_ggstat", selected = character(0))  
+    updateSelectizeInput(session, "event_ggstat", selected = character(0))  
+  })
+  
   AnovaResults <- reactive({
     # Filter the data based on the user's selection
     filteredData <- Summary_Data %>%
-      filter(year == input$YearAnova) 
+      filter(year == input$YearAnova,
+             #admin1 == input$Admin1_ggstat,
+             event_type == input$event_ggstat) 
     
     
     if(nrow(filteredData) == 0) return(NULL)  # Exit if no data    
     
     return(filteredData)  
     
-  })        
+  }) 
   
   
   output$Anovaplot <- renderPlot({
@@ -2278,6 +1810,8 @@ server <- function(input, output, session) {
     Anova <- ggbetweenstats(data = dataForAnova,
                             x = event_type, 
                             y = Total_Fatalities,
+                            #plot.type = input$PlotType,
+                            conf.level = input$Conlevel,
                             type = input$Testtype,
                             mean.ci = TRUE, 
                             pairwise.comparisons = TRUE, 
@@ -2294,69 +1828,60 @@ server <- function(input, output, session) {
   
   #Mosaic Plot
   
-  MosaicResults <- reactive({
-    # Filter the data based on the user's selection
-    filteredData <- Region_Summary %>%
-      filter(year == input$YearMosaic) 
-    
-    
-    if(nrow(filteredData) == 0) return(NULL)  # Exit if no data    
-    
-    return(filteredData)  
-    
-  })        
+  #  MosaicResults <- reactive({
+  # Filter the data based on the user's selection
+  #    filteredData <- Region_Summary %>%
+  #      filter(year == input$YearMosaic) 
   
   
-  #  output$Mosaicplot <- renderPlot({
+  #    if(nrow(filteredData) == 0) return(NULL)  # Exit if no data    
   
-  #  dataForMosaic <- MosaicResults()  
+  #    return(filteredData)  
   
-  #  if(is.null(dataForMosaic)) return()  # Check if the data is NULL and exit if it is
-  
-  # Mosaic <- mosaic(~ admin1 + event_type, data=Summary_Data, gp = shading_max)
+  #  })        
   
   
-  #  Mosaic
+  #  output$Mosaicplot <- renderPlotly({
   
-  # })
+  #    dataForMosaic <- MosaicResults()  
   
+  #    if(is.null(dataForMosaic)) return()  # Check if the data is NULL and exit if it is
   
-  output$Mosaicplot <- renderPlotly({
-    
-    dataForMosaic <- MosaicResults()  
-    
-    if(is.null(dataForMosaic)) return()  # Check if the data is NULL and exit if it is
-    
-    gg5 <- ggplot(dataForMosaic) +
-      geom_mosaic(aes(weight = Total_Fatalities,
-                      x = product(event_type, country), fill = admin1)) +
-      labs(x = "Myanmar",
-           fill = "Regions") +
-      theme(
-        axis.text.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.ticks.x = element_blank()
-      )
-    
-    # Converting the ggplot object to a plotly object
-    ggplotly(gg5)
-  })
+  #    gg5 <- ggplot(dataForMosaic) +
+  #      geom_mosaic(aes(weight = Total_Fatalities,
+  #                      x = product(event_type, country), fill = admin1)) +
+  #      labs(x = "Myanmar",
+  #           fill = "Regions") +
+  #      theme(
+  #        axis.text.x = element_blank(),
+  #        axis.title.y = element_blank(),
+  #        axis.ticks.x = element_blank()
+  #      )
+  
+  # Converting the ggplot object to a plotly object
+  #    ggplotly(gg5)
+  #  })
   
   
   # VCD mosaic
-  MosaicResults2 <- reactive({
+  MosaicResults2 <- eventReactive(input$Mosaic2Update, {
     # Filter the data based on the user's selection
-    filteredData <- ACLED_MMR %>%
-      filter(year == input$YearMosaic2) 
+    filteredData <- ACLED_MMR_Mosaic  %>%
+      filter(year == input$YearMosaic2, admin1 == input$Option1, event_type == input$Option2, Has_Fatalities == input$Option3)
+      #filter(admin1 == input$Option1) %>%
+      #filter(event_type == input$Option2) %>%
+      #filter(Has_Fatalities == input$Option3)
+      
     
     
     if(nrow(filteredData) == 0) return(NULL)  # Exit if no data    
     
-    return(filteredData)  
+    return(filteredData)
+  
     
   })        
   
-  #still has error here
+  
   
   output$Mosaicplot2 <- renderPlot({
     
@@ -2364,15 +1889,16 @@ server <- function(input, output, session) {
     
     if(is.null(dataForMosaic2)) return()  # Check if the data is NULL and exit if it is
     
-    observed_table <- table(dataForMosaic2$admin1, dataForMosaic2$event_type)
+    Mosaic2 <- vcd::mosaic(~ admin1 + event_type, data = dataForMosaic2, gp = shading_max, 
+                           labeling = labeling_border(labels = TRUE, varnames = FALSE, 
+                                                      rot_labels = c(90, 0, 0, 0), 
+                                                      just_labels = c("left", "center", "center", "right")))
     
-    # Create the mosaic plot using the shading_max function directly in the shading argument
-    mosaic_plot <- mosaic(~ admin1 + event_type, data = observed_table, 
-                          shading = shading_max, 
-                          legend = TRUE)  # Add a legend if needed
     
-    print(mosaic_plot)  # Ensure the plot is printed in the Shiny app
+    Mosaic2
+    
   })
+  
   
   
   

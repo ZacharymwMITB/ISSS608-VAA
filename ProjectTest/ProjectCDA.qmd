@@ -300,17 +300,21 @@ girafe(
 From the chart above, the number of fatalities in battle seem to be correlated with the number of incidents. But it seems that it may not be the case for explosions/remote violence as shown for the region of Sagaing where there are a higher amount of explosions/remote violence however the fatalities are a lot lower.
 :::
 
-## 5. Anova Testing: Event Types & Fatatilites
+## 5. One-Way Anova Testing: Event Types & Fatatilites
 
-The following code chunk below is used for Anova Testing of the types of events against the number of fatalities grouped by regions.
+The following code chunk below is used for Anova Testing of the types of events against the number of fatalities.
 
 ```{r}
-#| fig-width: 14
-#| fig-height: 25
-grouped_ggbetweenstats(ACLED_MMR, 
+ACLED_ANOVA_Filtered <- ACLED_MMR %>%
+  filter(year == 2022)
+```
+
+```{r}
+
+
+ggbetweenstats(ACLED_ANOVA_Filtered, 
               x = event_type, 
               y = fatalities,
-              grouping.var = admin1,
               type = "np",
               pairwise.display = "s",
               pairwise_comparisons = TRUE,
@@ -445,7 +449,7 @@ vcd::mosaic(~ admin1 + sub_event_type + Has_Fatalities, gp=shading_Friendly, dat
 ## 2023
 
 ```{r}
-#| fig-width: 14
+#| fig-width: 20
 #| fig-height: 15
 
 

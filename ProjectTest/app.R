@@ -783,7 +783,7 @@ Confirm1 <- fluidRow(
                                       "0.99" = 0.99),
                           selected = 0.95),
          ),
-         box(title = "Chart Interpretation",
+         box(title = "About",
              status = "danger",
              solidHeader = TRUE,
              collapsible = TRUE,
@@ -804,39 +804,6 @@ Confirm1 <- fluidRow(
 )
 
 
-#Confirm2 <- fluidRow(
-#  column(2,
-#         box(title = "Analysis Period: 2020-2023",
-#             status = "info",
-#             solidHeader = FALSE,
-#             width = NULL,
-#             helpText("Filter Options for Dataset"),
-#             selectInput(inputId = "YearMosaic",
-#                         label = "Year:",
-#                         choices = seq(2020,2023),
-#                         selected = 2023)
-
-#         ),
-#         box(title = "Chart Interpretation",
-#             status = "danger",
-#             solidHeader = TRUE,
-#             collapsible = TRUE,
-#             width = NULL,
-#             textOutput("MosaicText")
-#         )
-#  ),
-#  column(10,
-#         box(title = "Mosaic Plot for event type per Region/State",
-#             status = "danger",
-#             solidHeader = TRUE,
-#             collapsible = TRUE,
-#             width = NULL,
-#             align = "left",
-#             plotlyOutput("Mosaicplot", height = "1400px")
-#         )
-#  )
-#)
-
 
 Confirm3 <- fluidRow(
   column(2,
@@ -847,7 +814,7 @@ Confirm3 <- fluidRow(
              helpText("Filter Options for Dataset"),
              selectInput(inputId = "YearMosaic2",
                          label = "Year:",
-                         choices = seq(2010,2023),
+                         choices = seq(2020,2023),
                          multiple = TRUE,
                          selected = 2023),
              selectizeInput(inputId = "Option1",
@@ -866,7 +833,7 @@ Confirm3 <- fluidRow(
                          ),
              actionButton("Mosaic2Update", "Update Plot")
              ),
-         box(title = "Chart Interpretation",
+         box(title = "About",
              status = "danger",
              solidHeader = TRUE,
              collapsible = TRUE,
@@ -1825,42 +1792,19 @@ server <- function(input, output, session) {
     
   })
   
-  
-  #Mosaic Plot
-  
-  #  MosaicResults <- reactive({
-  # Filter the data based on the user's selection
-  #    filteredData <- Region_Summary %>%
-  #      filter(year == input$YearMosaic) 
-  
-  
-  #    if(nrow(filteredData) == 0) return(NULL)  # Exit if no data    
-  
-  #    return(filteredData)  
-  
-  #  })        
-  
-  
-  #  output$Mosaicplot <- renderPlotly({
-  
-  #    dataForMosaic <- MosaicResults()  
-  
-  #    if(is.null(dataForMosaic)) return()  # Check if the data is NULL and exit if it is
-  
-  #    gg5 <- ggplot(dataForMosaic) +
-  #      geom_mosaic(aes(weight = Total_Fatalities,
-  #                      x = product(event_type, country), fill = admin1)) +
-  #      labs(x = "Myanmar",
-  #           fill = "Regions") +
-  #      theme(
-  #        axis.text.x = element_blank(),
-  #        axis.title.y = element_blank(),
-  #        axis.ticks.x = element_blank()
-  #      )
-  
-  # Converting the ggplot object to a plotly object
-  #    ggplotly(gg5)
-  #  })
+  output$AnovaText <- renderText({ 
+    "Analysis of Variance (ANOVA) is a statistical method used to test differences between two or more means.
+    It is similar to the t-test, but the t-test is generally used for comparing two means, 
+    while ANOVA is used when you have more than two means to compare.
+    
+    ANOVA is based on comparing the variance (or variation) between the data samples to the variation within each particular sample.
+    If the between-group variance is high and the within-group variance is low, 
+    this provides evidence that the means of the groups are significantly different.
+    
+    In the options above, users can select the confidence level, test type, p-adjust method and pair type. Filters available
+    would be the year of interest and event type." 
+  })
+
   
   
   # VCD mosaic
@@ -1900,7 +1844,18 @@ server <- function(input, output, session) {
   })
   
   
-  
+  output$Mosaic2Text <- renderText({ 
+    "A mosaic plot is a visualization tool used to discover the association between two or more variables. 
+    In the case above, we have a total of 3 variables which we are comparing - Region, Event Type and Fatalities.
+    The first split on the left would divide the regions on the horizontal plane.
+    The second split at the top would divide the event type on the vertical plane.
+    The third split would divide each region plane into 2 based on whether the events have fatalities or not on the horizontal plane.
+    
+    The size of each tile represents the proportions of observations in the region.
+    The colour of each tile would represent the magnitude of the residual where red tiles indicate significant negative residual where frequency
+    is less than expected and blue tiles indicate positive significant positive residuals where frequency is greater than expected.
+    The intensity of the colour represents the magnitude of the residuals as shown on the legend on the right."
+  })
   
   #==========================================================
   # END of Confirmatory Analysis Module

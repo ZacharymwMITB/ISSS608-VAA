@@ -144,7 +144,8 @@ ExploreOverviewrow1 <-  fluidRow(
                              label = "Years:", 
                              min = 2010, 
                              max = 2023,
-                             value = c(2010, 2023)),
+                             value = c(2010, 2023),
+                             sep = ""),
                  actionButton("resetButton", "Reset Selections")
              ),
              hr(),
@@ -1836,7 +1837,8 @@ server <- function(input, output, session) {
     Mosaic2 <- vcd::mosaic(~ admin1 + event_type + Has_Fatalities, data = dataForMosaic2, gp = shading_Friendly, 
                            labeling = labeling_border(labels = TRUE, varnames = FALSE, 
                                                       rot_labels = c(90, 0, 0, 0), 
-                                                      just_labels = c("left", "center", "center", "right")))
+                                                      just_labels = c("left", "center", "center", "right")),
+                           margins = c(15,10,4,10))
     
     
     Mosaic2

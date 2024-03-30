@@ -312,6 +312,7 @@ ACLED_ANOVA_Filtered <- ACLED_MMR %>%
 ```{r}
 
 
+
 ggbetweenstats(ACLED_ANOVA_Filtered, 
               x = event_type, 
               y = fatalities,
@@ -341,7 +342,8 @@ vcd::mosaic(~ admin1 + event_type + Has_Fatalities, gp=shading_Friendly, data = 
                                                  "left", 
                                                  "center", 
                                                  "right")
-                                 ))
+                                 ),
+            margins = c(10,10,4,10))
 ```
 
 ## 2022
@@ -359,7 +361,8 @@ vcd::mosaic(~ admin1 + event_type + Has_Fatalities, gp=shading_Friendly, data = 
                                                  "left", 
                                                  "center", 
                                                  "right")
-                                 ))
+                                 ),margins = c(10,10,4,10)
+            )
 ```
 
 ## 2023
@@ -377,7 +380,9 @@ vcd::mosaic(~ admin1 + event_type + Has_Fatalities, gp=shading_Friendly, data = 
                                                  "left", 
                                                  "center", 
                                                  "right")
-                                 ))
+                                 ),
+            margins = c(10,10,4,10)
+            )
 ```
 :::
 
@@ -421,7 +426,8 @@ vcd::mosaic(~ admin1 + sub_event_type + Has_Fatalities, gp=shading_Friendly, dat
                                                  "left", 
                                                  "center", 
                                                  "right")
-)
+),
+margins = c(10,10,4,10)
 )
 ```
 
@@ -442,7 +448,8 @@ vcd::mosaic(~ admin1 + sub_event_type + Has_Fatalities, gp=shading_Friendly, dat
                                                  "left", 
                                                  "center", 
                                                  "right")
-)
+),
+margins = c(10,10,4,10)
 )
 ```
 
@@ -451,6 +458,8 @@ vcd::mosaic(~ admin1 + sub_event_type + Has_Fatalities, gp=shading_Friendly, dat
 ```{r}
 #| fig-width: 20
 #| fig-height: 15
+
+
 
 
 ACLED_MMR_Mosaic_Filtered <- ACLED_MMR_Mosaic %>%
@@ -463,8 +472,11 @@ vcd::mosaic(~ admin1 + sub_event_type + Has_Fatalities, gp=shading_Friendly, dat
                                                  "left", 
                                                  "center", 
                                                  "right")
+),
+
+margins = c(10,10,4,10)
 )
-)
+
 ```
 :::
 

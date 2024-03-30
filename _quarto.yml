@@ -75,6 +75,6 @@ format:
       margin-width: 500px
       body-width: 1000px
       gutter-width: 2.0rem
+    smooth-scroll: true
 
 editor: visual
-
